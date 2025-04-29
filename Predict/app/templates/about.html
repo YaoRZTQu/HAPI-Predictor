@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"未卜先治" - 关于我们</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <!-- 加载主题工具脚本 -->
+    <script src="/static/js/theme-utils.js"></script>
+    <style>
+        /* 确保welcome-section样式与其他页面一致 */
+        .navbar {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        /* 将原来的about-header样式替换为welcome-section样式 */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #f8f9fa 100%);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            margin-top: 0 !important;
+            border-radius: 0 0 var(--border-radius-base) var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .welcome-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .welcome-section h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            animation: fade-in 0.5s ease-out;
+        }
+        
+        .welcome-section .lead {
+            color: #555;
+            animation: fade-in 0.5s ease-out 0.1s forwards;
+        }
+
+        .night-mode .welcome-section {
+            background: linear-gradient(135deg, rgba(0, 96, 122, 0.2) 0%, rgba(30, 30, 30, 0.4) 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .night-mode .welcome-section h1 {
+            color: var(--amber-text);
+        }
+        
+        .night-mode .welcome-section .lead {
+            color: #BBB;
+        }
+
+        /* 继承主页面的渐变背景和标题样式 - 以下是原始about-header的样式，保留作为备用 */
+        .about-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #f8f9fa 100%);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius-base) var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .about-header h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            animation: fade-in 0.5s ease-out;
+        }
+
+        .about-header .lead {
+            color: #555;
+            animation: fade-in 0.5s ease-out 0.1s forwards;
+        }
+
+        .about-section {
+            background: white;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .about-section h2 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .technology-card {
+            height: 100%;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-medium);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .technology-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .technology-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .contact-info {
+            background: white;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .contact-info h3 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .github-link {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--highlight-color) 100%);
+            border: none;
+            color: white;
+            transition: all var(--transition-medium);
+            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 夜间模式适配 */
+        .night-mode .about-header {
+            background: linear-gradient(135deg, rgba(0, 96, 122, 0.2) 0%, rgba(30, 30, 30, 0.4) 100%);
+        }
+
+        .night-mode .about-section,
+        .night-mode .technology-card,
+        .night-mode .contact-info {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .night-mode .about-header h1,
+        .night-mode .about-section h2,
+        .night-mode .card-title,
+        .night-mode .contact-info h3 {
+            color: var(--amber-text);
+        }
+
+        .night-mode .feature-list li,
+        .night-mode .about-header .lead {
+            color: #BBB;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tech-list li {
+            line-height: 1.6;
+        }
+        
+        .tech-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .tech-desc {
+            color: #555;
+        }
+        
+        .night-mode .tech-title {
+            color: var(--amber-text);
+        }
+        
+        .night-mode .tech-desc {
+            color: #BBB;
+        }
+        
+        .high-contrast .tech-title,
+        .high-contrast .tech-desc {
+            color: #fff !important;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-medium);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .contact-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            font-size: 1.1em;
+        }
+
+        .contact-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all var(--transition-fast);
+        }
+
+        .contact-link:hover {
+            color: var(--highlight-color);
+            transform: translateX(5px);
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--highlight-color) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all var(--transition-medium);
+            margin-bottom: 1rem;
+        }
+
+        .resource-link:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* 夜间模式适配 */
+        .night-mode .contact-card {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .night-mode .section-title {
+            color: var(--amber-text);
+        }
+
+        .night-mode .contact-link {
+            color: var(--amber-text);
+        }
+
+        .night-mode .contact-link:hover {
+            color: var(--highlight-color);
+        }
+
+        /* 高对比度模式 */
+        .high-contrast .section-title,
+        .high-contrast .contact-link {
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="bi bi-hospital me-2"></i> "未卜先治"
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reconstruction"><i class="bi bi-image" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/online-training"><i class="bi bi-gear-fill" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 我的反馈</a>
+                    </li>
+                    <li class="nav-item" id="adminLink" style="display: none;">
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 管理控制台</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">
+                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="welcome-section mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4">关于"未卜先治"</h1>
+                    <p class="lead">基于机器学习和临床决策支持的医疗预测系统</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <!-- 系统简介 -->
+        <div class="row mb-5">
+            <div class="col-md-10 mx-auto">
+                <div class="about-section p-4">
+                    <h2 class="mb-4"><i class="bi bi-info-circle me-2"></i>系统简介</h2>
+                    <p>"未卜先治"是基于机器学习技术的老年患者医院获得性压力性损伤(HAPI)风险预测系统。</p>
+                    <p>本系统核心采用先进的预测算法，通过对患者临床数据的综合分析，快速建立高精度风险评估模型，帮助医护人员提前识别高风险患者，实现及早干预。</p>
+                    <p>系统采用多模型集成策略，融合多种机器学习算法，具有高准确率、高灵敏度和高特异性，同时支持实时处理、数据可视化、结果解释和批量预测等功能，为临床决策提供科学依据。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统主要功能 -->
+        <div class="row mb-5">
+            <div class="col-md-10 mx-auto">
+                <h2 class="mb-4"><i class="bi bi-list-check me-2"></i>系统主要功能</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body">
+                                <h3 class="card-title"><i class="bi bi-image card-icon d-block text-primary"></i>HAPI风险预测</h3>
+                                <ul class="feature-list">
+                                    <li>单例预测：输入单个患者数据进行个体化风险评估</li>
+                                    <li>批量预测：批量处理多位患者的数据并生成综合风险报告</li>
+                                    <li>多模型集成：集成XGBoost、随机森林等多种模型提升预测准确率</li>
+                                    <li>风险等级评估：自动分级患者风险等级并提供干预建议</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body">
+                                <h3 class="card-title"><i class="bi bi-clipboard2-pulse card-icon d-block text-danger"></i>医学智能辅助</h3>
+                                <ul class="feature-list">
+                                    <li>智能问诊：基于自然语言处理的智能问答系统</li>
+                                    <li>数据看板：系统运行状态和预测数据统计可视化</li>
+                                    <li>特征重要性分析：识别影响风险的关键因素</li>
+                                    <li>预测结果解释：提供模型决策依据的可视化分析</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body">
+                                <h3 class="card-title"><i class="bi bi-gear-fill card-icon d-block text-warning"></i>系统管理</h3>
+                                <ul class="feature-list">
+                                    <li>用户管理：多级用户权限管理</li>
+                                    <li>数据安全：加密传输与匿名化处理确保患者隐私</li>
+                                    <li>多主题支持：包含白天模式和夜间模式</li>
+                                    <li>反馈系统：用户反馈收集与问题跟踪</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body">
+                                <h3 class="card-title"><i class="bi bi-robot card-icon d-block text-success"></i>医疗专家问答</h3>
+                                <ul class="feature-list">
+                                    <li>基于LORA微调的DeepSeek医疗专家</li>
+                                    <li>实时问答交互界面</li>
+                                    <li>支持医疗咨询、诊断建议等功能</li>
+                                    <li>支持语音输入和语音朗读，提供自然交流体验</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body">
+                                <h3 class="card-title"><i class="bi bi-graph-up card-icon d-block text-info"></i>数据看板</h3>
+                                <ul class="feature-list">
+                                    <li>系统使用统计数据可视化</li>
+                                    <li>预测与问答趋势图表</li>
+                                    <li>预测任务历史记录查询</li>
+                                    <li>用户活动监控与分析</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 技术栈 -->
+        <div class="row mb-5">
+            <div class="col-md-10 mx-auto">
+                <h2 class="mb-4"><i class="bi bi-stack me-2"></i>技术栈</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body p-4">
+                                <h3 class="card-title mb-4">后端技术</h3>
+                                <ul class="tech-list">
+                                    <li class="mb-3">
+                                        <strong class="tech-title">框架</strong>: 
+                                        <span class="tech-desc">FastAPI - 异步支持、自动API文档、高性能路由</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">机器学习</strong>:
+                                        <span class="tech-desc">XGBoost、随机森林等集成模型 - 用于HAPI风险预测</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">数据库</strong>: 
+                                        <span class="tech-desc">SQLAlchemy + PostgreSQL - 关系型数据存储、事务支持、数据迁移</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">数据处理</strong>:
+                                        <span class="tech-desc">Pandas、NumPy - 数据预处理、特征工程/span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body p-4">
+                                <h3 class="card-title mb-4">前端技术</h3>
+                                <ul class="tech-list">
+                                    <li class="mb-3">
+                                        <strong class="tech-title">UI框架</strong>: 
+                                        <span class="tech-desc">Bootstrap 5 - 响应式设计、主题定制、组件库</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">实时通信</strong>: 
+                                        <span class="tech-desc">WebSocket - 实时数据更新、双向通信、断线重连</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">图表</strong>: 
+                                        <span class="tech-desc">Chart.js - 数据可视化、实时更新、交互式图表</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">交互</strong>: 
+                                        <span class="tech-desc">jQuery - DOM操作、事件处理、AJAX请求</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body p-4">
+                                <h3 class="card-title mb-4">医学风险预测工具</h3>
+                                <ul class="tech-list">
+                                    <li class="mb-3">
+                                        <strong class="tech-title">预测模型</strong>:
+                                        <span class="tech-desc">集成多种机器学习算法</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">特征分析</strong>:
+                                        <span class="tech-desc">特征重要性评估工具</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">结果解释</strong>:
+                                        <span class="tech-desc">模型解释框架</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 technology-card">
+                            <div class="card-body p-4">
+                                <h3 class="card-title mb-4">系统平台</h3>
+                                <ul class="tech-list">
+                                    <li class="mb-3">
+                                        <strong class="tech-title">容器化</strong>: 
+                                        <span class="tech-desc">Docker - 环境隔离、快速部署、横向扩展</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">Web服务器</strong>: 
+                                        <span class="tech-desc">Nginx - 反向代理、负载均衡、静态资源服务</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">进程管理</strong>: 
+                                        <span class="tech-desc">Gunicorn - 多工作进程、优雅重启、监控接口</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong class="tech-title">安全验证</strong>:
+                                        <span class="tech-desc">JWT - 令牌认证、权限控制</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 我们的联系方式 -->
+        <div class="row mb-5">
+            <div class="col-md-10 mx-auto">
+                <h2 class="mb-4"><i class="bi bi-envelope me-2"></i>联系我们</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-card h-100">
+                            <div class="card-body p-4">
+                                <div class="contact-section mb-4">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-people-fill me-2"></i>项目维护者
+                                    </h3>
+                                    <p class="text-break mb-0">王金洋 吴志宏 普昊冕</p>
+                                </div>
+                                
+                                <div class="contact-section mb-4">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-envelope-fill me-2"></i>电子邮件
+                                    </h3>
+                                    <a href="mailto:swuwjy08@email.swu.edu.cn" class="contact-link">
+                                        swuwjy08@email.swu.edu.cn
+                                    </a>
+                                </div>
+                                
+                                <div class="contact-section mb-4">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-bug-fill me-2"></i>问题反馈
+                                    </h3>
+                                    <a href="mailto:swuwjy08@email.swu.edu.cn" class="contact-link">
+                                        swuwjy08@email.swu.edu.cn
+                                    </a>
+                                </div>
+                                
+                                <!-- 添加反馈按钮 -->
+                                <button type="button" class="btn btn-primary w-100" id="feedbackBtn" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                                    <i class="bi bi-chat-right-text me-2"></i>提交反馈
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="contact-card h-100">
+                            <div class="card-body p-4">
+                                <div class="contact-section">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-folder-fill me-2"></i>项目资源
+                                    </h3>
+                                    <div class="resource-links">
+                                        <a href="https://github.com/yang-arr/CV_Internship" target="_blank" class="resource-link mb-3">
+                                            <i class="bi bi-github me-2"></i>访问GitHub仓库
+                                        </a>
+                                        
+                                        <a href="https://github.com/yang-arr/CV_Internship" target="_blank" class="contact-link d-block mb-3">
+                                            <i class="bi bi-file-earmark-text me-2"></i>文档地址
+                                        </a>
+                                        
+                                        <a href="https://github.com/yang-arr/CV_Internship" target="_blank" class="contact-link d-block">
+                                            <i class="bi bi-play-btn me-2"></i>演示地址
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 "未卜先治". 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- 反馈Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">提交反馈</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="mb-3">
+                            <label for="feedbackTitle" class="form-label">标题</label>
+                            <input type="text" class="form-control" id="feedbackTitle" placeholder="请输入反馈标题" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackContent" class="form-label">内容</label>
+                            <textarea class="form-control" id="feedbackContent" rows="5" placeholder="请详细描述您的问题或建议..." required></textarea>
+                        </div>
+                    </form>
+                    <div id="feedbackMessage" class="alert" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="submitFeedback">
+                        <span id="feedbackSubmitText">提交</span>
+                        <span id="feedbackLoading" class="spinner-border spinner-border-sm ms-1" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/auth.js"></script>
+
+    <!-- 添加反馈处理脚本 -->
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 获取反馈表单元素
+            const feedbackForm = document.getElementById('feedbackForm');
+            const submitButton = document.getElementById('submitFeedback');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackContent = document.getElementById('feedbackContent');
+            const messageDiv = document.getElementById('feedbackMessage');
+            const submitText = document.getElementById('feedbackSubmitText');
+            const loadingSpinner = document.getElementById('feedbackLoading');
+            const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            
+            // 检查用户是否登录
+            const token = localStorage.getItem('access_token');
+            const feedbackBtn = document.getElementById('feedbackBtn');
+            
+            if (!token) {
+                // 未登录用户，点击反馈按钮时跳转到登录页面
+                feedbackBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.setItem('redirect_after_login', '/about');
+                    window.location.href = '/login';
+                });
+            } else {
+                // 提交反馈
+                submitButton.addEventListener('click', async () => {
+                    // 表单验证
+                    if (!feedbackTitle.value.trim() || !feedbackContent.value.trim()) {
+                        messageDiv.textContent = '请填写完整的反馈信息';
+                        messageDiv.className = 'alert alert-danger';
+                        messageDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    // 显示加载状态
+                    submitButton.disabled = true;
+                    submitText.textContent = '提交中...';
+                    loadingSpinner.style.display = 'inline-block';
+                    messageDiv.style.display = 'none';
+                    
+                    try {
+                        const response = await fetch('/api/feedback/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                            },
+                            body: JSON.stringify({
+                                title: feedbackTitle.value,
+                                content: feedbackContent.value
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            // 提交成功
+                            messageDiv.textContent = '感谢您的反馈！我们会尽快处理。';
+                            messageDiv.className = 'alert alert-success';
+                            
+                            // 清空表单
+                            feedbackTitle.value = '';
+                            feedbackContent.value = '';
+                            
+                            // 3秒后关闭弹窗
+                            setTimeout(() => {
+                                modal.hide();
+                            }, 3000);
+                        } else {
+                            // 提交失败
+                            const errorData = await response.json();
+                            messageDiv.textContent = errorData.detail || '提交失败，请稍后再试';
+                            messageDiv.className = 'alert alert-danger';
+                        }
+                    } catch (error) {
+                        console.error('提交反馈出错:', error);
+                        messageDiv.textContent = '网络错误，请检查您的连接';
+                        messageDiv.className = 'alert alert-danger';
+                    } finally {
+                        // 恢复按钮状态
+                        submitButton.disabled = false;
+                        submitText.textContent = '提交';
+                        loadingSpinner.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                    }
+                });
+            }
+            
+            // 显示管理员入口
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink && localStorage.getItem('user_role') === 'admin') {
+                adminLink.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html> 

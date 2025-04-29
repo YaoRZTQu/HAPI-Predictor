@@ -1,0 +1,560 @@
+{% extends '/predictor/base.html' %}
+
+{% block title %}批量预测 - HAPI风险预测系统{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        /* 修复文件上传区域 */
+        .drag-area {
+            border: 2px dashed var(--border-color);
+            background: rgba(var(--light-rgb), 0.5);
+            min-height: 200px;
+            border-radius: var(--border-radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all var(--transition-medium);
+        }
+
+        .drag-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(var(--light-rgb), 0.7);
+        }
+
+        .drag-area.active {
+            border: 2px solid var(--primary-color);
+            background: rgba(var(--primary-rgb), 0.05);
+        }
+
+        .night-mode .drag-area {
+            background: rgba(var(--dark-rgb), 0.3);
+            border-color: var(--dark-border-color);
+        }
+
+        .night-mode .drag-area:hover {
+            border-color: var(--amber-text);
+            background: rgba(var(--dark-rgb), 0.5);
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--highlight-color) 100%) !important;
+            border: none !important;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+            padding: 0.6rem 1.5rem;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border: none;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-medium);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+        
+        .card-header.bg-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--highlight-color) 100%) !important;
+            border: none !important;
+        }
+        
+        /* 添加动画效果 - 与dashboard.html一致 */
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out;
+        }
+        
+        .animate-fade-in-delay-1 {
+            animation: fade-in 0.8s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+        
+        .animate-fade-in-delay-2 {
+            animation: fade-in 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .animate-fade-in-delay-3 {
+            animation: fade-in 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 确保welcome-section样式完全与dashboard.html一致 */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #f8f9fa 100%);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius-base) var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .welcome-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+        
+        .welcome-section h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .night-mode .welcome-section {
+            background: linear-gradient(135deg, rgba(0, 96, 122, 0.2) 0%, rgba(30, 30, 30, 0.4) 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .night-mode .welcome-section h1 {
+            color: var(--amber-text);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<!-- 页面头部 -->
+<header class="welcome-section animate-fade-in">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h1 class="display-5">老年患者多例HAPI风险预测</h1>
+                <p class="lead">上传患者数据批量评估HAPI风险并生成预测报告</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- 数据安全提示 -->
+    <div class="alert alert-info animate-fade-in-delay-1 mb-4">
+        <i class="bi bi-shield-lock me-2"></i>
+        <strong>数据安全与隐私:</strong> 您上传的患者数据仅在本地处理，不会存储在我们的服务器上。处理完成后，所有临时数据将被自动删除。
+    </div>
+    
+    <!-- 使用说明 -->
+    <div class="card animate-fade-in-delay-2 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>使用说明</h4>
+        </div>
+        <div class="card-body">
+            <h6 class="border-bottom pb-2 mb-3">批量预测文件格式要求</h6>
+            <ul class="mb-4">
+                <li>支持CSV或Excel格式（.csv、.xlsx、.xls）</li>
+                <li>文件必须包含所有必要的预测字段（见下方必需字段列表）</li>
+                <li>遵循模板文件中的数据格式和取值范围</li>
+                <li>如果包含<code>actual_label</code>列，系统将计算评估指标</li>
+            </ul>
+            
+            <h6 class="border-bottom pb-2 mb-3">必需字段列表</h6>
+            
+            <div class="accordion mb-4" id="fieldsAccordion">
+                <!-- 数值型字段 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingNumeric">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumeric" aria-expanded="true" aria-controls="collapseNumeric">
+                            <strong>数值型字段</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseNumeric" class="accordion-collapse collapse show" aria-labelledby="headingNumeric" data-bs-parent="#fieldsAccordion">
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>字段名称</th>
+                                            <th>说明</th>
+                                            <th>单位/范围</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>住院第几天</td>
+                                            <td>患者入院后的天数</td>
+                                            <td>天 (整数)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>白细胞计数</td>
+                                            <td>血液中白细胞的数量</td>
+                                            <td>10^9/L (通常范围: 4.0-10.0)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>血钾浓度</td>
+                                            <td>血液中钾离子的浓度</td>
+                                            <td>mmol/L (通常范围: 3.5-5.5)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>白蛋白计数</td>
+                                            <td>血液中白蛋白的浓度</td>
+                                            <td>g/L (通常范围: 35.0-55.0)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分类型字段 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCategorical">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategorical" aria-expanded="false" aria-controls="collapseCategorical">
+                            <strong>分类型字段</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseCategorical" class="accordion-collapse collapse" aria-labelledby="headingCategorical" data-bs-parent="#fieldsAccordion">
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>字段名称</th>
+                                            <th>说明</th>
+                                            <th>有效值</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>吸烟史</td>
+                                            <td>患者是否有吸烟习惯</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>摩擦力/剪切力</td>
+                                            <td>皮肤受到的摩擦和剪切力</td>
+                                            <td><code>无</code> / <code>潜在</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>移动能力</td>
+                                            <td>患者自主移动的能力</td>
+                                            <td><code>不受限</code> / <code>受限</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>感知觉</td>
+                                            <td>患者对外界刺激的感知能力</td>
+                                            <td><code>不受限</code> / <code>受限</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>身体活动度</td>
+                                            <td>患者日常活动状态</td>
+                                            <td><code>走</code> / <code>坐</code> / <code>卧</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>日常食物获取</td>
+                                            <td>患者获取食物的情况</td>
+                                            <td><code>充足</code> / <code>缺乏</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>水肿</td>
+                                            <td>患者是否有水肿症状</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>皮肤潮湿</td>
+                                            <td>患者皮肤湿度状况</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>意识障碍</td>
+                                            <td>患者意识状态</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>高血压</td>
+                                            <td>患者是否患有高血压</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>糖尿病</td>
+                                            <td>患者是否患有糖尿病</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>冠心病</td>
+                                            <td>患者是否患有冠心病</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td>下肢深静脉血栓</td>
+                                            <td>患者是否患有下肢静脉血栓</td>
+                                            <td><code>无</code> / <code>有</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 可选字段 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOptional">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
+                            <strong>可选字段</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#fieldsAccordion">
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>字段名称</th>
+                                            <th>说明</th>
+                                            <th>有效值</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>序号</td>
+                                            <td>数据记录的唯一标识符</td>
+                                            <td>整数 (1, 2, 3...)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>年龄</td>
+                                            <td>患者年龄</td>
+                                            <td>整数 (通常范围: 60-100)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>actual_label</td>
+                                            <td>真实的压伤风险标签（如有）</td>
+                                            <td><code>0</code> (无风险) / <code>1</code> (有风险)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-secondary mt-3">
+                                <i class="bi bi-lightbulb me-2"></i>若提供 <code>actual_label</code> 列，系统将计算评估指标并生成ROC曲线及混淆矩阵等可视化图表。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <div class="d-flex">
+                    <div class="me-3">
+                        <i class="bi bi-exclamation-triangle-fill fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6 class="alert-heading">注意事项</h6>
+                        <p class="mb-0">请确保数据格式正确，严格遵循上述字段的有效值范围，尤其是分类型字段的取值必须与系统规定一致，否则可能导致预测失败。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 上传数据文件部分 -->
+    <div class="card mb-4 shadow-sm animate-fade-in-delay-2">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-upload me-2"></i>上传数据文件</h5>
+        </div>
+        <div class="card-body">
+            <!-- 错误提示区域 -->
+            <div id="errorAlert" class="alert alert-danger mb-4" style="display: none;">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <span id="errorMessage">处理文件时出错</span>
+            </div>
+            
+            <form id="batch-prediction-form" action="/api/predictor/batch_predict" method="post" enctype="multipart/form-data" class="mb-4 needs-validation" novalidate>
+                <div class="mb-4">
+                    <label for="file" class="form-label fw-bold">选择CSV或Excel文件</label>
+                    <input type="file" class="form-control form-control-lg" id="file" name="file" accept=".csv, .xlsx, .xls" required>
+                    <div class="form-text">上传包含必要字段的CSV或Excel文件，系统将使用多个模型进行综合预测并生成结果。文件大小不超过10MB。</div>
+                    <div class="invalid-feedback">请选择一个文件。</div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex mt-4">
+                    <a href="/api/predictor/download_template" class="btn btn-outline-secondary btn-lg">
+                         <i class="bi bi-download me-2"></i> 下载模板
+                     </a>
+                    <button type="submit" class="btn btn-primary btn-lg flex-grow-1" id="submit-btn">
+                        <i class="bi bi-arrow-right-circle me-2"></i> 上传并分析
+                    </button>
+                </div>
+            </form>
+            
+            <div id="batch-results" class="mt-4">
+                {% if request.query_params.get('success') == 'true' %}
+                    {% set batch_id = request.query_params.get('batch_id', '') %}
+                    <div class="alert alert-success">
+                        <h5><i class="bi bi-check-circle me-2"></i> 预测完成</h5>
+                        <p>批量预测任务 {{ batch_id }} 处理完成，您可以下载预测结果文件：</p>
+                        <a href="/api/predictor/download_batch_results/{{ batch_id }}" class="btn btn-success mt-2">
+                            <i class="bi bi-download me-2"></i> 下载预测结果
+                        </a>
+                        <button type="button" class="btn btn-primary mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#resultModal" id="showResultBtn">
+                            <i class="bi bi-graph-up me-2"></i> 查看详情
+                        </button>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // 设置模态框内容
+                                const modalMessage = document.getElementById('modalMessage');
+                                if (modalMessage) {
+                                    modalMessage.innerHTML = `<i class="bi bi-check-circle me-2"></i> 批量预测任务 {{ batch_id }} 处理完成。`;
+                                }
+                                
+                                // 设置下载按钮链接
+                                const downloadResultBtn = document.getElementById('downloadResultBtn');
+                                if (downloadResultBtn) {
+                                    downloadResultBtn.href = "/api/predictor/download_batch_results/{{ batch_id }}";
+                                }
+                            });
+                        </script>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4 animate-fade-in-delay-2">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i> 隐私与安全</h5>
+        </div>
+        <div class="card-body">
+            <p>本系统采用以下措施保护您的数据：</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul>
+                        <li><strong>传输加密：</strong> 所有数据通过加密通道传输</li>
+                        <li><strong>匿名化处理：</strong> 系统不存储患者身份识别信息</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li><strong>定期数据清理：</strong> 所有结果将在30天后自动删除</li>
+                        <li><strong>访问控制：</strong> 只有授权用户可访问分析结果</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-muted small mb-0">注意：请勿在上传文件中包含任何可识别患者身份的信息。如有数据安全方面的顾虑，请联系系统管理员。</p>
+        </div>
+    </div>
+</div>
+
+<!-- 添加结果模态框 -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="resultModalLabel">批量预测结果</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="关闭"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalMessage" class="alert alert-success mb-4">
+                    <!-- 消息内容将由JavaScript填充 -->
+                </div>
+                <p class="mb-3">批量预测已完成，您可以点击下方按钮下载预测结果文件。</p>
+                <div class="d-grid">
+                    <a href="#" id="downloadResultBtn" class="btn btn-lg btn-success">
+                        <i class="bi bi-download me-2"></i> 下载预测结果
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('批量预测页面脚本已加载');
+    
+    const form = document.getElementById('batch-prediction-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsDiv = document.getElementById('batch-results');
+    const errorAlert = document.getElementById('errorAlert');
+    
+    // 隐藏错误提示的函数
+    function hideErrorAlert() {
+        if (errorAlert) {
+            errorAlert.style.display = 'none';
+        }
+    }
+    
+    // 文件输入变化时隐藏错误提示
+    const fileInput = document.getElementById('file');
+    if (fileInput) {
+        fileInput.addEventListener('change', hideErrorAlert);
+    }
+    
+    // 获取并初始化模态框
+    const resultModalElement = document.getElementById('resultModal');
+    let resultModal;
+    if (resultModalElement && typeof bootstrap !== 'undefined') {
+        console.log('初始化模态框');
+        resultModal = new bootstrap.Modal(resultModalElement);
+        
+        // 如果有显示结果按钮，添加点击事件
+        const showResultBtn = document.getElementById('showResultBtn');
+        if (showResultBtn) {
+            showResultBtn.addEventListener('click', function() {
+                resultModal.show();
+            });
+        }
+    }
+});
+
+// 添加样式
+document.head.insertAdjacentHTML('beforeend', `
+<style>
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+    display: inline-block;
+    vertical-align: text-bottom;
+    border: 0.15em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border .75s linear infinite;
+}
+@keyframes spinner-border {
+    to { transform: rotate(360deg); }
+}
+</style>
+`);
+</script>
+{% endblock %}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医疗专家问答系统 - "未卜先治"</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/medical_qa.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <!-- 加载主题工具脚本 -->
+    <script src="/static/js/theme-utils.js"></script>
+    <!-- 认证检查脚本，必须在页面开始时执行 -->
+    <script>
+        // 检查认证状态
+        (function() {
+            const token = localStorage.getItem('access_token');
+            const tokenType = localStorage.getItem('token_type');
+            
+            console.log('检查认证状态: ', Boolean(token && tokenType));
+            
+            if (!token || !tokenType) {
+                console.log('未找到有效令牌，重定向到登录页面');
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+    <style>
+        /* 添加动画效果 - 与dashboard.html一致 */
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out;
+        }
+        .animate-fade-in-delay-1 {
+            animation: fade-in 0.8s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+        .animate-fade-in-delay-2 {
+            animation: fade-in 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        .animate-fade-in-delay-3 {
+            animation: fade-in 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            border: none;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-medium);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+    </style>
+</head>
+<body>
+    <!-- 必须在页面开头引入Marked.js库，用于Markdown渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.0/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
+
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="bi bi-hospital me-2"></i> "未卜先治"
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 我的反馈</a>
+                    </li>
+                    <li class="nav-item" id="adminLink" style="display: none;">
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 管理控制台</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">
+                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 - 修改为与dashboard.html一致的结构 -->
+    <header class="welcome-section animate-fade-in">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1 class="display-5">智能问诊</h1>
+                    <p class="lead">"未卜先治"医疗专家问答系统</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container mt-4">
+        <!-- 历史对话侧边栏 -->
+        <div id="historySidebar" class="animate-fade-in-delay-1">
+            <div class="sidebar-header">
+                <div class="sidebar-title">历史对话</div>
+                <button id="toggleSidebarBtn" class="btn sidebar-toggle-btn" title="收起侧边栏">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="sidebar-search">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" id="historySearchInput" class="form-control" placeholder="搜索历史对话...">
+                </div>
+            </div>
+            
+            <!-- 历史记录列表 -->
+            <div id="historyList" class="history-list">
+                <div class="history-empty">
+                    <i class="bi bi-clock-history"></i>
+                    <p>暂无历史记录</p>
+                </div>
+            </div>
+            
+            <!-- 底部按钮 -->
+            <div class="sidebar-footer">
+                <button id="newChatBtn" class="btn btn-primary mb-2 w-100">
+                    <i class="bi bi-plus-circle me-1"></i> 新建会话
+                </button>
+                <button id="clearHistoryBtn" class="btn btn-outline-danger w-100">
+                    <i class="bi bi-trash"></i> 清空全部历史
+                </button>
+            </div>
+            
+            <!-- 侧边栏收起时显示的图标 -->
+            <div class="sidebar-icons">
+                <button id="historyIcon" class="sidebar-icon-btn" title="历史对话">
+                    <i class="bi bi-clock-history"></i>
+                </button>
+                <button id="newChatIcon" class="sidebar-icon-btn" title="新建对话">
+                    <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 语音功能介绍卡片 -->
+        <div class="card mb-4 animate-fade-in-delay-1">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-info-circle-fill me-2"></i>语音交互功能</h5>
+                <p class="card-text">您现在可以通过语音与医疗助手进行交流：</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-mic-fill text-primary me-2"></i> 点击麦克风按钮开始语音输入</li>
+                    <li class="mb-2"><i class="bi bi-volume-up-fill text-success me-2"></i> 点击语音播报按钮开启/关闭AI回答的语音朗读</li>
+                    <li class="mb-2"><i class="bi bi-play-fill text-success me-2"></i> 点击消息右下角的播放按钮可朗读该条消息</li>
+                </ul>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="autoReadToggle">
+                    <label class="form-check-label" for="autoReadToggle">自动朗读AI回答</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chat-container border animate-fade-in-delay-2" id="chatContainer">
+                    <!-- AI脑电波思考状态 -->
+                    <div class="brain-wave" id="brainWave">
+                        <svg viewBox="0 0 1000 100">
+                            <path class="brain-wave-path" d="M0,50 Q200,10 300,50 T600,50 T900,50" />
+                        </svg>
+                    </div>
+                    
+                    <!-- 医学加载动画 -->
+                    <div class="medical-loader" id="medicalLoader"></div>
+                    
+                    <!-- 思考中状态指示器 -->
+                    <div id="thinkingState" class="thinking-state hidden">
+                        <div class="thinking-spinner me-2"></div>
+                        <div class="thinking-text">思考中...</div>
+                    </div>
+                    
+                    <!-- 示例对话，包含思维链 -->
+                    <div class="message user-message">
+                        HAPI（医院获得性压力性损伤）是什么？有什么注意事项？
+                    </div>
+                    
+                    <div class="message ai-message">
+                        <div class="thinking-container">
+                            <div class="thinking-badge">思考过程</div>
+                            <div class="thinking-step">嗯，用户问的是HAPI医院获得性压力性损伤是什么，以及有什么注意事项。首先，我需要确认HAPI的正确全称和定义。HAPI应该是Hospital-Acquired Pressure Injury的缩写，也就是医院获得性压力性损伤，通常指患者在住院期间因压力导致的皮肤或皮下组织损伤，比如褥疮。</div>
+                            <div class="thinking-step">接下来要解释HAPI的成因，这可能包括长时间的压力、剪切力、摩擦力，还有患者的个体因素，比如活动能力差、营养不良、皮肤潮湿等。然后需要分阶段说明，按照国际通用的分类，可能分为1到4期，还有不可分期的和深部组织损伤的情况。</div>
+                            <div class="thinking-step">注意事项方面，应该包括预防措施，比如定期翻身、使用减压设备、皮肤检查、保持清洁干燥、营养支持、患者及家属教育，以及一旦发生压伤后的处理措施，如及时评估、伤口护理、多学科合作和记录报告。</div>
+                            <div class="thinking-step">要检查有没有遗漏的重要点，比如湿度控制、营养的重要性、翻身的具体时间间隔（如每2小时一次），以及使用什么样的减压设备（气垫床、泡沫垫等）。还要强调早期发现的重要性，因为1期压伤是可逆的，及时处理可以避免恶化。</div>
+                            <div class="thinking-step">最后，结构要清晰，分点列出定义、成因、分期和注意事项，每个部分用简短的标题，便于阅读。可能需要提醒用户如果遇到具体情况应咨询专业医护人员，因为每个患者的情况可能不同。</div>
+                        </div>
+                        
+                        <div class="ai-content">
+                            <h3>HAPI（医院获得性压力性损伤）</h3>
+                            <p>是指患者在住院期间因压力、剪切力或摩擦力导致的皮肤和/或皮下组织损伤，通常称为“褥疮”或“压疮”。它是医疗护理中需重点预防的并发症，常见于长期卧床、活动受限或重症患者。</p>
+                            <h4>HAPI主要成因：</h4>
+                            <ul>
+                                <li><strong>1.持续压力：</strong>骨突部位（如骶尾、足跟、髋部）长时间受压，导致血液循环受阻。</li>
+                                <li><strong>2.剪切力：</strong>患者半卧位时，皮肤与床单摩擦，深层组织受牵拉损伤。</li>
+                                <li><strong>3.潮湿环境：</strong>大小便失禁、出汗等导致皮肤脆弱。</li>
+                                <li><strong>4.个体因素：</strong>高龄、营养不良、糖尿病、低血压、感觉障碍等增加风险。</li>
+                            </ul>
+                            <h4>注意事项与预防措施</h4>
+                            <ul>
+                                <li><strong>1. 预防措施：</strong>每2小时更换体位，使用侧卧30°体位（减少骨突压力），使用气垫床、泡沫垫等分散压力，避免直接卧于硬质表面。每日检查骨突部位，尤其1期红斑（肤色深者需借助灯光）。</li>
+                                <li><strong>2. 发生HAPI后的处理：</strong>记录损伤分期、大小、渗出情况，拍照存档。根据分期选择敷料（如水胶体、泡沫敷料），清创坏死组织。禁止按摩发红区域（可能加重深层损伤）。</li>
+                                <li><strong>3. 教育与沟通：</strong>教会家属翻身技巧及皮肤观察方法。定期更新压疮护理指南，规范操作流程。</li>
+                            </ul>
+                        </div>
+                        
+                        <i class="bi bi-play-fill play-button" data-text=""></i>
+                    </div>
+                    
+                    <!-- 欢迎消息 -->
+                    <div class="ai-message message">
+                        <p>您好！我是您的AI医疗助手。请问有什么可以帮您？</p>
+                        <i class="bi bi-play-fill play-button" data-text="您好！我是您的AI医疗助手。请问有什么可以帮您？"></i>
+                    </div>
+                    
+                    <div class="typing-indicator ai-message message" id="typingIndicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                
+                <div class="input-group mt-3">
+                    <input type="text" class="form-control" id="userInput" placeholder="请输入您的问题...">
+                    <button class="btn btn-primary" type="button" id="sendButton">
+                        <i class="bi bi-send me-1"></i>发送
+                    </button>
+                </div>
+                
+                <!-- 语音控制按钮 -->
+                <div class="voice-controls d-flex justify-content-center">
+                    <button class="voice-button voice-input-button" id="voiceInputButton" title="语音输入">
+                        <i class="bi bi-mic-fill"></i>
+                    </button>
+                    <button class="voice-button voice-output-button" id="voiceOutputButton" title="语音播报设置">
+                        <i class="bi bi-volume-up-fill"></i>
+                    </button>
+                    <button class="voice-button voice-stop-button" id="voiceStopButton" title="停止朗读">
+                        <i class="bi bi-stop-fill"></i>
+                    </button>
+                </div>
+                
+                <!-- 语音设置面板 -->
+                <div class="voice-settings" id="voiceSettings">
+                    <div class="form-group mb-3">
+                        <label for="voiceSelect">选择语音：</label>
+                        <select class="form-select" id="voiceSelect"></select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="rateRange">语速：</label>
+                        <input type="range" class="form-range" min="0.5" max="2" step="0.1" value="1" id="rateRange">
+                        <div class="d-flex justify-content-between">
+                            <span>慢</span>
+                            <span id="rateValue">1.0</span>
+                            <span>快</span>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="pitchRange">音调：</label>
+                        <input type="range" class="form-range" min="0.5" max="2" step="0.1" value="1" id="pitchRange">
+                        <div class="d-flex justify-content-between">
+                            <span>低</span>
+                            <span id="pitchValue">1.0</span>
+                            <span>高</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary w-100" id="testVoiceButton">测试语音</button>
+                </div>
+                
+                <div class="text-muted mt-3 text-center">
+                    <small>注意：本系统仅供参考，不能替代专业医生的诊断和建议。</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 历史会话删除确认弹窗 -->
+    <div class="modal fade" id="deleteHistoryModal" tabindex="-1" aria-labelledby="deleteHistoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteHistoryModalLabel">确认删除</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <p>确定要删除这个会话记录吗？此操作无法撤销。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 清空所有历史记录确认弹窗 -->
+    <div class="modal fade" id="clearAllHistoryModal" tabindex="-1" aria-labelledby="clearAllHistoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearAllHistoryModalLabel">确认清空</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <p>确定要清空所有历史会话记录吗？此操作无法撤销。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmClearAllBtn">确认清空</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/medical_qa.js"></script>
+    
+    <!-- 立即初始化管理员权限 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保按钮显示正确
+            if (window.authManager) {
+                console.log('手动触发权限检查');
+                window.authManager.updateUIElements();
+            } else {
+                console.error('找不到authManager对象');
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,124 @@
+{% extends '/predictor/base.html' %}
+
+{% block title %}批量预测结果{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        /* 添加动画效果 - 与dashboard.html一致 */
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out;
+        }
+        .animate-fade-in-delay-1 {
+            animation: fade-in 0.8s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+        .animate-fade-in-delay-2 {
+            animation: fade-in 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        .animate-fade-in-delay-3 {
+            animation: fade-in 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-header.bg-primary, .card-header.bg-secondary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--highlight-color) 100%) !important;
+            border: none !important;
+        }
+        .card {
+            border: none;
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-medium);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight-color));
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--highlight-color) 100%) !important;
+            border: none !important;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+            padding: 0.6rem 1.5rem;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-success animate-fade-in">
+        <h4><i class="fas fa-check-circle me-2"></i>批量预测完成</h4>
+        <p>已成功处理文件：{{ filename }}</p>
+        <p>共处理 {{ results.file_count }} 条记录</p>
+    </div>
+    
+    <div class="card mb-4 animate-fade-in-delay-1">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-table me-2"></i>预测结果</h5>
+        </div>
+        <div class="card-body">
+            <p>您的批量预测已完成处理。结果文件包含以下内容：</p>
+            <ul>
+                <li>原始输入数据</li>
+                <li>各个模型的预测概率和预测结果</li>
+                <li>综合预测结果和风险等级</li>
+            </ul>
+            
+            <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <span>Excel文件中包含所有详细的预测数据，您可以使用它进行进一步的分析。</span>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{{ results.download_url }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-download me-2"></i> 下载预测结果Excel文件
+                </a>
+                <a href="/predictor/batch" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i> 返回批量预测
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4 animate-fade-in-delay-2">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="fas fa-lock me-2"></i> 数据安全提示</h5>
+        </div>
+        <div class="card-body">
+            <p>本系统采用以下措施保护您的数据：</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul>
+                        <li><strong>传输加密：</strong> 所有数据通过加密通道传输</li>
+                        <li><strong>匿名化处理：</strong> 系统不存储患者身份识别信息</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li><strong>定期数据清理：</strong> 所有结果将在30天后自动删除</li>
+                        <li><strong>访问控制：</strong> 只有授权用户可访问分析结果</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-muted small mb-0">注意：请勿在上传文件中包含任何可识别患者身份的信息。如有数据安全方面的顾虑，请联系系统管理员。</p>
+        </div>
+    </div>
+</div>
+{% endblock %} 

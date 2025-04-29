@@ -1,0 +1,633 @@
+/* data_dashboard.css - 数据看板样式 */
+
+:root {
+    /* 医疗增强型配色系统 */
+    --primary-color: #00607A; /* 深海蓝 - 主色调 - 传递专业感，降低视觉疲劳 */
+    --secondary-color: #E3F2FD; /* 医用蓝白 - 辅助色 - 提升屏幕可读性，减少眩光 */
+    --highlight-color: #00B0FF; /* 荧光蓝 - 高亮色 - 用于3D重建标记，符合DICOM标准 */
+    --alert-color: #D32F2F; /* 凝血红 - 警示区 - 紧急异常区域提示 */
+    --safe-color: #388E3C; /* 叶绿 - 安全区 - 正常指标标识 */
+    --background-color: #FAFAFA; /* 灰白 - 背景色 - 符合医疗显示器校准标准 */
+    --dark-bg-color: #121212; /* OLED黑 - 夜间模式背景 */
+    --amber-text: #FFC107; /* 琥珀色 - 夜间模式文字 */
+    --dark-card-bg: #1E1E1E; /* 深色卡片背景 */
+    --dark-text: #E0E0E0; /* 深色模式文本 */
+    --accent-color: #FF5722;
+    --light-bg: #f8f9fa;
+    --dark-bg: #212529;
+    --text-color: #333;
+    --light-text: #f8f9fa;
+    --gray-text: #6c757d;
+    --border-color: #dee2e6;
+
+    /* 字体大小和行高 */
+    --font-size-base: 16px;
+    --line-height-base: 1.5;
+    --border-radius-base: 8px;
+    
+    /* 动画持续时间 */
+    --transition-slow: 0.5s;
+    --transition-medium: 0.3s;
+    --transition-fast: 0.15s;
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+    background-color: var(--background-color);
+    background-image: linear-gradient(135deg, rgba(0, 96, 122, 0.03) 0%, rgba(0, 176, 255, 0.05) 100%);
+    margin: 0;
+    padding: 0;
+    line-height: var(--line-height-base);
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    transition: all var(--transition-medium);
+    min-height: 100vh;
+}
+
+/* 夜间模式样式 */
+body.night-mode {
+    background-color: var(--dark-bg-color);
+    background-image: none;
+    color: var(--dark-text);
+}
+
+/* 导航栏通用样式 - 与其他页面保持一致 */
+.navbar {
+    background: linear-gradient(120deg, #0F2027, #203A43, #2C5364) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-medium);
+}
+
+.night-mode .navbar {
+    background: linear-gradient(120deg, #0a192f, #0f2027, #172e48) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+    transition: all var(--transition-fast);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link i {
+    margin-right: 0.25rem;
+    font-size: 1rem;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: var(--secondary-color) !important;
+}
+
+.nav-link.active {
+    position: relative;
+    font-weight: 500;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background-color: var(--highlight-color);
+    border-radius: 3px 3px 0 0;
+}
+
+.dashboard-header {
+    background-color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.night-mode .dashboard-header {
+    background-color: #2c2c2c;
+    color: var(--light-text);
+}
+
+.dashboard-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.night-mode .stat-card {
+    background-color: #2c2c2c;
+    color: var(--light-text);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.night-mode .stat-icon {
+    color: var(--highlight-color);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.night-mode .stat-value {
+    color: var(--amber-text);
+}
+
+.stat-label {
+    color: var(--gray-text);
+    font-size: 0.9rem;
+}
+
+.night-mode .stat-label {
+    color: #adb5bd;
+}
+
+/* 性能指标样式 */
+.performance-indicator {
+    margin-bottom: 1.2rem;
+}
+
+.performance-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.performance-progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #eee;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+.performance-value {
+    font-weight: 600;
+}
+
+.night-mode .performance-value {
+    color: #AAA;
+}
+
+/* 为性能卡片添加特殊样式 */
+.performance-chart {
+    height: 100%;
+}
+
+#performance-indicators {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* 系统性能卡片容器 */
+.chart-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    height: 100%;
+}
+
+.night-mode .chart-container {
+    background-color: #2c2c2c;
+    color: var(--light-text);
+}
+
+.chart-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 图表Canvas样式 */
+.chart-container canvas {
+    max-height: 220px !important;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: all var(--transition-medium);
+}
+
+.night-mode .theme-toggle {
+    background-color: #333;
+}
+
+.theme-toggle i {
+    font-size: 22px;
+    color: #555;
+    transition: all var(--transition-medium);
+}
+
+.night-mode .theme-toggle i {
+    color: var(--amber-text);
+}
+
+.theme-toggle:hover {
+    transform: rotate(15deg);
+}
+
+/* 加载动画 */
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 记录容器样式 */
+.records-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    height: 100%;
+}
+
+.night-mode .records-container {
+    background-color: #2c2c2c;
+    color: var(--light-text);
+}
+
+.records-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.night-mode .records-title {
+    color: #9fa8da;
+}
+
+.record-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.night-mode .record-item {
+    border-color: #444;
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.record-time {
+    font-size: 0.8rem;
+    color: var(--gray-text);
+    margin-top: 0.25rem;
+}
+
+.night-mode .record-time {
+    color: #aaa;
+}
+
+.metrics-info {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    color: #666;
+}
+
+.night-mode .metrics-info {
+    color: #888;
+}
+
+/* 页脚样式 */
+.bg-light {
+    background-color: var(--background-color) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.night-mode .bg-light {
+    background-color: #1a1a1a !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 高对比度模式 */
+body.high-contrast {
+    --primary-color: #ff0;
+    --secondary-color: #ff0;
+    --text-color: #fff;
+    --light-text: #fff;
+    --background: #000;
+    --border-color: #fff;
+}
+
+body.high-contrast .navbar,
+body.high-contrast .dashboard-header,
+body.high-contrast .stat-card,
+body.high-contrast .chart-container,
+body.high-contrast .records-container {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+
+body.high-contrast .stat-icon,
+body.high-contrast .stat-value,
+body.high-contrast .dashboard-title,
+body.high-contrast .chart-title,
+body.high-contrast .records-title {
+    color: yellow;
+}
+
+/* 响应式调整 */
+@media (max-width: 767.98px) {
+    .stat-value {
+        font-size: 1.8rem;
+    }
+    
+    .chart-container, 
+    .records-container {
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-header {
+        padding: 1.5rem 0;
+    }
+}
+
+/* 消息对话样式 */
+.conversation-container {
+    background-color: white;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    max-width: 85%;
+}
+
+.user-message {
+    background-color: #e3f2fd;
+    margin-left: auto;
+    text-align: right;
+}
+
+.system-message {
+    background-color: #f5f5f5;
+    margin-right: auto;
+}
+
+.message-content {
+    position: relative;
+}
+
+.message-text {
+    word-break: break-word;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: var(--gray-text);
+    margin-top: 5px;
+}
+
+/* 夜间模式对话样式 */
+body.night-mode .conversation-container {
+    background-color: #2c2c2c;
+}
+
+body.night-mode .user-message {
+    background-color: #1a3a5f;
+}
+
+body.night-mode .system-message {
+    background-color: #3a3a3a;
+}
+
+body.night-mode .message-time {
+    color: #aaa;
+}
+
+/* 淡入动画 */
+.animate-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 表格样式美化 */
+.table-bordered th, .table-bordered td {
+    border-color: var(--border-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+body.night-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.night-mode .table-bordered th, 
+body.night-mode .table-bordered td {
+    border-color: #444;
+}
+
+/* 预测详情模态框中的代码块样式 */
+.code-block {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    max-height: 200px;
+    white-space: pre-wrap;
+    border: 1px solid #eee;
+}
+
+.night-mode .code-block {
+    background-color: #2d3748;
+    border-color: #444;
+    color: #e2e8f0;
+}
+
+.field-name {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.night-mode .field-name {
+    color: var(--highlight-color);
+}
+
+.field-value {
+    word-break: break-word;
+}
+
+/* 展开/收起按钮样式 */
+.show-full-text,
+.hide-full-text {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.night-mode .show-full-text,
+.night-mode .hide-full-text {
+    color: var(--highlight-color);
+}
+
+/* 模态框样式优化 */
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
+}
+
+.night-mode .modal-content {
+    background-color: #2c2c2c;
+    color: var(--light-text);
+}
+
+.modal-header {
+    background: linear-gradient(120deg, #0F2027, #203A43, #2C5364);
+    color: white;
+    border-bottom: none;
+}
+
+.night-mode .modal-header {
+    background: linear-gradient(120deg, #0a192f, #0f2027, #172e48);
+}
+
+.modal-footer {
+    border-top: none;
+    background-color: #f8f9fa;
+}
+
+.night-mode .modal-footer {
+    background-color: #2c2c2c;
+}
+
+.card-header.bg-primary {
+    background: linear-gradient(120deg, #0F2027, #203A43, #2C5364) !important;
+    border: none;
+}
+
+.night-mode .card-header.bg-primary {
+    background: linear-gradient(120deg, #0a192f, #0f2027, #172e48) !important;
+}
+
+.night-mode .table-light {
+    background-color: #343a40;
+    color: #e2e8f0;
+}
+
+/* 自定义风险等级标签颜色 */
+.badge.bg-danger {
+    background-color: var(--alert-color) !important;
+}
+
+.badge.bg-warning {
+    background-color: #FFC107 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-success {
+    background-color: var(--safe-color) !important;
+}
+
+/* 美化表格样式 */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 176, 255, 0.05);
+}
+
+.night-mode .table-hover tbody tr:hover {
+    background-color: rgba(0, 176, 255, 0.1);
+}
+
+.table-borderless td, .table-borderless th {
+    border: none;
+}
+
+.fw-semibold {
+    font-weight: 600;
+}
+
+/* 卡片阴影效果 */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    transition: all var(--transition-medium);
+}
+
+.shadow-sm:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1) !important;
+}
+
+.night-mode .shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.2) !important;
+}
+
+.night-mode .shadow-sm:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.3) !important;
+} 
