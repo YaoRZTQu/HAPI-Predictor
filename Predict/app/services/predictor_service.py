@@ -13,7 +13,6 @@ import openpyxl
 import json
 from datetime import datetime
 
-# Reportlab imports (copied from HAPI app.py)
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -1091,5 +1090,3 @@ async def process_batch_file_with_all_models(file: UploadFile) -> tuple[str, Pat
     except Exception as e:
         logger.error(f"处理批量文件时出错: {e}", exc_info=True)
         raise RuntimeError(f"批量预测处理失败: {str(e)}")
-
-# 注意：批量预测、报告生成等逻辑尚未迁移 

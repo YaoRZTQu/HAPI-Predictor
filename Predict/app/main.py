@@ -15,7 +15,6 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from pathlib import Path
 from sqlalchemy.orm import Session
 from typing import Optional
-# from jose import JWTError, jwt
 import datetime
 import pandas as pd
 import logging
@@ -33,8 +32,8 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # 创建FastAPI实例
 app = FastAPI(
-    title="MRI重建系统",
-    description="基于隐式神经表示（INR）的二维MRI图像重建系统",
+    title="HAPI预测系统",
+    description="基于机器学习的医院获得性压力性损伤（HAPI）预测系统",
     version="1.0.0"
 )
 
@@ -107,8 +106,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 @app.get("/")
 async def root(request: Request):
     """根路由重定向到仪表盘或登录页面"""
-    # 直接重定向到仪表盘页面，仪表盘页面会自动验证用户是否登录
-    # 如果未登录，dashboard_page会自动抛出异常并重定向到登录页面
     return RedirectResponse(url="/dashboard")
 
 # 登录页面路由
@@ -147,44 +144,34 @@ async def register_page(request: Request):
     """渲染注册页面"""
     return templates.TemplateResponse("register.html", {"request": request})
 
-# 原重建页面路由 - 修改为重定向到新的单例预测页面路由
-@app.get("/reconstruction")
-async def redirect_reconstruction(request: Request):
-    return RedirectResponse(url="/predictor/single") 
-
-# 原在线训练页面路由 - 修改为重定向到新的批量预测页面路由
-@app.get("/online-training")
-async def redirect_training(request: Request):
-    return RedirectResponse(url="/predictor/batch")
-
-# 新增: 单例预测页面路由
+# 单例预测页面路由
 @app.get("/predictor/single")
 async def single_predict_page(request: Request, current_user: User = Depends(get_current_user)):
-    """渲染单例预测页面。"""
+    """渲染单例预测页面"""
     return templates.TemplateResponse("predictor/index.html", { 
         "request": request, 
         "username": current_user.username,
         "now": datetime.datetime.now() 
     })
 
-# 新增: 批量预测页面路由
+# 批量预测页面路由
 @app.get("/predictor/batch")
 async def batch_predict_page(request: Request, current_user: User = Depends(get_current_user)):
-    """渲染批量预测上传页面。"""
+    """渲染批量预测上传页面"""
     return templates.TemplateResponse("predictor/batch_predict.html", { 
         "request": request, 
         "username": current_user.username,
         "now": datetime.datetime.now()
     })
 
-# 新增: 批量预测结果页面路由
+# 批量预测结果页面路由
 @app.get("/predictor/batch_results/{batch_id}")
 async def batch_results_page(
     batch_id: str, 
     request: Request, 
     current_user: User = Depends(get_current_user)
 ):
-    """渲染批量预测结果页面。"""
+    """渲染批量预测结果页面"""
     # 检查结果文件是否存在
     result_filename = f"batch_{batch_id}_results.xlsx"
     result_filepath = predictor_service.BATCH_RESULTS_DIR / result_filename
@@ -259,21 +246,21 @@ async def settings_page(request: Request, current_user: User = Depends(get_curre
         "username": current_user.username
     })
 
-# 关于我们页面路由
+# 关于页面路由
 @app.get("/about")
 async def about_page(request: Request):
-    """渲染关于我们页面"""
+    """渲染关于页面"""
     return templates.TemplateResponse("about.html", {"request": request})
 
-# 管理员控制台页面路由
+# 管理员页面路由
 @app.get("/admin")
 async def admin_page(request: Request, current_user: User = Depends(get_current_user)):
-    """渲染管理员控制台页面"""
+    """渲染管理员页面"""
     # 检查用户是否是管理员
-    if current_user.role != "admin":
+    if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="权限不足，仅管理员可访问此页面"
+            detail="需要管理员权限"
         )
     return templates.TemplateResponse("admin.html", {
         "request": request,
@@ -289,18 +276,20 @@ async def my_feedback_page(request: Request, current_user: User = Depends(get_cu
         "username": current_user.username
     })
 
-# 根路由 - API信息
+# API根路由
 @app.get("/api")
 async def api_root():
+    """API根路由，返回API文档链接"""
     return {
-        "name": "MRI重建系统API",
-        "version": "1.0.0",
-        "description": "基于隐式神经表示（INR）的二维MRI图像重建系统API服务"
+        "message": "欢迎使用HAPI预测系统API",
+        "documentation": "/docs",
+        "version": "1.0.0"
     }
 
 # 健康检查路由
 @app.get("/health")
 async def health_check():
+    """健康检查路由"""
     return {"status": "healthy"}
 
 if __name__ == "__main__":
@@ -312,4 +301,4 @@ if __name__ == "__main__":
         sys.path.append(root_dir)
     
     import uvicorn
-    uvicorn.run("Predict.app.main:app", host="127.0.0.1", port=8001, reload=True)
+    uvicorn.run("Predict.app.main:app", host="127.0.0.1", port=8000, reload=True)

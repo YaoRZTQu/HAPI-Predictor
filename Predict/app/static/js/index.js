@@ -162,12 +162,12 @@ document.getElementById('helpBtn').addEventListener('click', () => {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="helpModalLabel">MRI重建系统使用帮助</h5>
+                    <h5 class="modal-title" id="helpModalLabel">HAPI预测系统使用帮助</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h5><i class="bi bi-1-circle-fill me-2"></i>选择图像文件</h5>
-                    <p>点击<strong>选择图像文件</strong>按钮，上传需要重建的MRI图像。支持常见图像格式如PNG、JPG等。</p>
+                    <h5><i class="bi bi-1-circle-fill me-2"></i>选择文件</h5>
+                    <p>点击<strong>选择文件</strong>按钮，上传需要预测的患者数据。支持CSV和Excel格式。</p>
                     
                     <h5><i class="bi bi-2-circle-fill me-2"></i>选择重建模型</h5>
                     <p>从下拉菜单中选择适合的重建模型，系统将显示所选模型的详细信息。</p>

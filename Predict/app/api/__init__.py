@@ -1,5 +1,5 @@
 """
-MRI重建系统API模块
+HAPI预测系统API模块
 包含以下路由：
 - model_management: 模型管理API
 - upload: 文件上传API

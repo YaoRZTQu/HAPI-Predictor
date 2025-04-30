@@ -8,6 +8,7 @@ import psutil
 from sqlalchemy import func, distinct
 from sqlalchemy.orm import Session
 from datetime import timedelta
+import logging
 
 from Predict.app.services import auth
 from Predict.app.schemas.user import TokenData
@@ -18,6 +19,9 @@ from Predict.app.models.user import User
 from Predict.app.models.chat_history import ChatHistory, ChatMessage
 
 router = APIRouter(prefix="/api/data-dashboard", tags=["data_dashboard"])
+
+# 设置日志记录器
+logger = logging.getLogger(__name__)
 
 @router.get("/stats")
 async def get_dashboard_stats(current_user: TokenData = Depends(auth.get_current_user)):
@@ -38,33 +42,70 @@ async def get_dashboard_stats(current_user: TokenData = Depends(auth.get_current
         # 获取活跃用户数
         users_count = db_session.query(func.count(distinct(User.id))).scalar() or 0
         
-        # 获取真实系统性能指标
+        # 系统性能指标默认值
+        cpu_usage = 0.0
+        memory_usage = 0.0
+        disk_usage = 0.0
+        response_time = 0
+        
+        # 获取真实系统性能指标 - 分别捕获每个指标的异常，确保一个失败不影响其他指标
+        # CPU使用率
         try:
-            process = psutil.Process(os.getpid())
-            
-            # CPU使用率 - 保留两位小数
-            cpu_usage = round(psutil.cpu_percent(interval=0.1), 2)
-            
-            # 内存使用率 - 保留两位小数
-            # 使用系统全局内存使用率，而不是单个进程
+            cpu_usage = round(psutil.cpu_percent(interval=0.5), 2)
+            logger.info(f"获取CPU使用率: {cpu_usage}%")
+        except Exception as e:
+            logger.error(f"获取CPU使用率失败: {str(e)}")
+        
+        # 内存使用率
+        try:
             memory = psutil.virtual_memory()
             memory_usage = round(memory.percent, 2)
-            
-            # 磁盘使用率 - 保留两位小数
-            # 使用应用程序所在目录的磁盘使用情况
-            app_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-            disk_usage = round(psutil.disk_usage(app_dir).percent, 2)
-            
-            # 响应时间 - 模拟值，实际应该通过监控系统获取
-            # 单位为毫秒，保留整数
-            response_time = 120  # 120ms，一个合理的默认值
+            logger.info(f"获取内存使用率: {memory_usage}%")
         except Exception as e:
-            # 如果获取系统指标出错，使用默认值
-            cpu_usage = 0.0
-            memory_usage = 0.0
+            logger.error(f"获取内存使用率失败: {str(e)}")
+        
+        # 磁盘使用率
+        try:
+            if os.name == 'nt':  # Windows系统
+                try:
+                    # 获取所有磁盘分区信息
+                    partitions = psutil.disk_partitions()
+                    # 获取第一个固定磁盘的使用率
+                    for partition in partitions:
+                        if partition.fstype and 'fixed' in partition.opts:
+                            disk_info = psutil.disk_usage(partition.mountpoint)
+                            disk_usage = round(disk_info.percent, 2)
+                            logger.info(f"Windows系统 - 使用分区: {partition.mountpoint}, 使用率: {disk_usage}%")
+                            break
+                    else:
+                        # 如果没有找到固定磁盘，使用第一个有效分区
+                        for partition in partitions:
+                            if partition.fstype:
+                                disk_info = psutil.disk_usage(partition.mountpoint)
+                                disk_usage = round(disk_info.percent, 2)
+                                logger.info(f"Windows系统 - 使用备选分区: {partition.mountpoint}, 使用率: {disk_usage}%")
+                                break
+                        else:
+                            logger.warning("未找到有效的磁盘分区")
+                            disk_usage = 0.0
+                except Exception as partition_error:
+                    logger.error(f"获取Windows分区信息失败: {str(partition_error)}")
+                    disk_usage = 0.0
+            else:  # Linux/Unix系统
+                disk_usage = round(psutil.disk_usage('/').percent, 2)
+                logger.info(f"Unix系统 - 使用根目录, 使用率: {disk_usage}%")
+        except Exception as e:
+            logger.error(f"获取磁盘使用率失败: {str(e)}")
             disk_usage = 0.0
-            response_time = 0
-            print(f"获取系统性能指标时出错: {str(e)}")
+        
+        # 响应时间 - 实际应通过监控系统获取，这里提供一个模拟值
+        try:
+            # 这里可以实现实际测量响应时间的逻辑
+            # 简单起见，这里使用一个合理的模拟值
+            response_time = random.randint(80, 150)  # 模拟80-150ms的响应时间
+            logger.info(f"获取响应时间: {response_time}ms")
+        except Exception as e:
+            logger.error(f"获取响应时间失败: {str(e)}")
         
         # 返回结果
         return {
@@ -82,6 +123,7 @@ async def get_dashboard_stats(current_user: TokenData = Depends(auth.get_current
             }
         }
     except Exception as e:
+        logger.error(f"获取统计数据时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取统计数据时出错: {str(e)}"
@@ -118,6 +160,7 @@ async def get_prediction_trend(days: int = 7, current_user: TokenData = Depends(
             "batch_prediction": list(batch_prediction_data.values())
         }
     except Exception as e:
+        logger.error(f"获取预测趋势数据时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取预测趋势数据时出错: {str(e)}"
@@ -144,6 +187,7 @@ async def get_recent_predictions(limit: int = 5, current_user: TokenData = Depen
         
         return result
     except Exception as e:
+        logger.error(f"获取最近预测记录时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取最近预测记录时出错: {str(e)}"
@@ -184,6 +228,7 @@ async def get_qa_trend(days: int = 7, current_user: TokenData = Depends(auth.get
             "counts": counts
         }
     except Exception as e:
+        logger.error(f"获取问答趋势数据时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取问答趋势数据时出错: {str(e)}"
@@ -228,6 +273,7 @@ async def get_recent_qa(limit: int = 5, current_user: TokenData = Depends(auth.g
             "qa_records": qa_records
         }
     except Exception as e:
+        logger.error(f"获取最近问答记录时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取最近问答记录时出错: {str(e)}"
@@ -276,6 +322,7 @@ async def get_prediction_detail(prediction_id: str, current_user: TokenData = De
                 "results": {}
             }
     except Exception as e:
+        logger.error(f"获取预测详情时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取预测详情时出错: {str(e)}"
@@ -328,6 +375,7 @@ async def get_conversation_detail(conversation_id: str, current_user: TokenData 
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"获取对话详情时出错: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取对话详情时出错: {str(e)}"

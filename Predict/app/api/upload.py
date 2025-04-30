@@ -272,4 +272,55 @@ async def view_file(path: str = Query(...)):
         raise
     except Exception as e:
         logger.error(f"获取文件时出错: {e}")
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/patients/", response_model=Dict[str, Any])
+async def upload_patient_data(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    description: str = Form(None),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    上传患者数据文件
+    
+    参数:
+    - file: 要上传的患者数据文件
+    - description: 文件描述（可选）
+    
+    返回:
+    - 文件信息
+    """
+    logger.info(f"Received patient data upload: {file.filename}")
+    
+    try:
+        # 检查文件类型
+        if not file.content_type.startswith("application/") and not file.content_type.startswith("text/"):
+            raise HTTPException(status_code=400, detail="只接受应用程序或文本文件")
+        
+        # 读取文件内容
+        content = await file.read()
+        
+        # 生成唯一文件名
+        filename = f"{uuid.uuid4().hex}_{file.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        
+        # 保存文件
+        with open(file_path, "wb") as f:
+            f.write(content)
+        
+        # 返回结果
+        return {
+            "filename": filename,
+            "original_filename": file.filename,
+            "content_type": file.content_type,
+            "file_size": len(content),
+            "file_path": file_path,
+            "description": description,
+            "user_id": current_user.id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"上传患者数据文件时出错: {e}")
+        raise HTTPException(status_code=500, detail=f"上传失败: {str(e)}") 
