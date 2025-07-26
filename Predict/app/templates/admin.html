@@ -227,6 +227,11 @@
             color: white;
         }
 
+        .status-unreaded {
+            background: linear-gradient(135deg, #90A4AE 0%, #adb5bd 100%);
+            color: #fff;
+        }
+
         /* 按钮样式 */
         .btn-outline-primary {
             border-color: var(--primary-color);
@@ -445,9 +450,10 @@
                             <div class="col-md-6">
                                 <div class="btn-group float-md-end" role="group">
                                     <button type="button" class="btn btn-outline-primary active" data-filter="all">所有</button>
-                                    <button type="button" class="btn btn-outline-warning" data-filter="pending">待处理</button>
-                                    <button type="button" class="btn btn-outline-info" data-filter="processing">处理中</button>
-                                    <button type="button" class="btn btn-outline-success" data-filter="resolved">已解决</button>
+                                    <button type="button" class="btn btn-outline-warning" data-filter="pending">高风险</button>
+                                    <button type="button" class="btn btn-outline-info" data-filter="processing">中风险</button>
+                                    <button type="button" class="btn btn-outline-success" data-filter="resolved">低风险</button>
+                                    <button type="button" class="btn btn-outline-dark" data-filter="unreaded">待回复</button>
                                 </div>
                             </div>
                         </div>
@@ -527,9 +533,10 @@
                         <div class="mb-3">
                             <label for="statusSelect" class="form-label">更新状态</label>
                             <select class="form-select" id="statusSelect">
-                                <option value="pending">待处理</option>
-                                <option value="processing">处理中</option>
-                                <option value="resolved">已解决</option>
+                                <option value="pending">高风险</option>
+                                <option value="processing">中风险</option>
+                                <option value="resolved">低风险</option>
+                                <option value="unreaded">待回复</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -767,16 +774,19 @@
                 switch (feedback.status) {
                     case 'pending':
                         statusClass = 'status-pending';
-                        statusText = '待处理';
+                        statusText = '高风险';
                         break;
                     case 'processing':
                         statusClass = 'status-processing';
-                        statusText = '处理中';
+                        statusText = '中风险';
                         break;
                     case 'resolved':
                         statusClass = 'status-resolved';
-                        statusText = '已解决';
+                        statusText = '低风险';
                         break;
+                    case 'unreaded':
+                        statusClass = 'status-unreaded';
+                        statusText = '待回复'
                 }
                 
                 // 创建日期格式化
@@ -853,16 +863,21 @@
                     switch (feedback.status) {
                         case 'pending':
                             statusClass = 'status-pending';
-                            statusText = '待处理';
+                            statusText = '高风险';
                             break;
                         case 'processing':
                             statusClass = 'status-processing';
-                            statusText = '处理中';
+                            statusText = '中风险';
                             break;
                         case 'resolved':
                             statusClass = 'status-resolved';
-                            statusText = '已解决';
+                            statusText = '低风险';
                             break;
+                        case 'unreaded':
+                            statusClass = 'status-unreaded';
+                            statusText = '待回复'
+                            break;
+
                     }
                     
                     // 创建日期格式化

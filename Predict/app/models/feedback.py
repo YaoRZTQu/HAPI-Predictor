@@ -11,7 +11,7 @@ class Feedback(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum("pending", "processing", "resolved"), default="pending", nullable=False)
+    status = Column(Enum("pending", "processing", "resolved", "unreaded"), default="unreaded", nullable=False)
     reply = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)

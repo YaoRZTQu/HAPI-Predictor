@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的反馈 - "未卜先治"</title>
+    <title>咨询留言 - "未卜先治"</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
@@ -143,19 +143,26 @@
         }
 
         .status-pending {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            color: #fff;
         }
 
         .status-processing {
-            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
-            color: #fff;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .status-resolved {
             background: linear-gradient(135deg, var(--safe-color) 0%, #4CAF50 100%);
             color: #fff;
         }
+
+        .status-unreaded {
+            background: linear-gradient(135deg, #90A4AE 0%, #adb5bd 100%);
+            color: #fff;
+        }
+
+
 
         /* 回复区域样式 */
         .reply-section {
@@ -312,7 +319,7 @@
                         <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 我的反馈</a>
+                        <a class="nav-link active" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
                         <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 管理控制台</a>
@@ -332,11 +339,11 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1><i class="bi bi-chat-left-text me-2"></i>我的反馈</h1>
-                    <p class="text-muted mb-0">查看您提交的反馈和系统管理员的回复</p>
+                    <h1><i class="bi bi-chat-left-text me-2"></i>咨询留言</h1>
+                    <p class="text-muted mb-0">查看您提交的咨询和专业医师的回复</p>
                 </div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newFeedbackModal">
-                    <i class="bi bi-plus-circle me-2"></i>新建反馈
+                    <i class="bi bi-plus-circle me-2"></i>新建咨询
                 </button>
             </div>
         </div>
@@ -350,15 +357,15 @@
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">加载中...</span>
                 </div>
-                <p class="mt-2">正在加载您的反馈...</p>
+                <p class="mt-2">正在加载您的咨询...</p>
             </div>
             
             <!-- 空状态 -->
             <div class="col-12" id="emptyState" style="display: none;">
                 <div class="empty-state">
                     <i class="bi bi-chat-square-text"></i>
-                    <h3>您还没有提交任何反馈</h3>
-                    <p class="text-muted">暂无反馈记录</p>
+                    <h3>您还没有提交任何咨询</h3>
+                    <p class="text-muted">暂无咨询记录</p>
                 </div>
             </div>
         </div>
@@ -369,18 +376,18 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newFeedbackModalLabel">新建反馈</h5>
+                    <h5 class="modal-title" id="newFeedbackModalLabel">新建咨询</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
                 </div>
                 <div class="modal-body">
                     <form id="newFeedbackForm">
                         <div class="mb-3">
                             <label for="newFeedbackTitle" class="form-label">标题</label>
-                            <input type="text" class="form-control" id="newFeedbackTitle" placeholder="请输入反馈标题" required>
+                            <input type="text" class="form-control" id="newFeedbackTitle" placeholder="请输入咨询标题" required>
                         </div>
                         <div class="mb-3">
                             <label for="newFeedbackContent" class="form-label">内容</label>
-                            <textarea class="form-control" id="newFeedbackContent" rows="5" placeholder="请详细描述您的问题或建议..." required></textarea>
+                            <textarea class="form-control" id="newFeedbackContent" rows="5" placeholder="请详细描述您的问题或身体状况..." required></textarea>
                         </div>
                     </form>
                     <div id="newFeedbackMessage" class="alert" style="display: none;"></div>
@@ -401,7 +408,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="feedbackDetailModalLabel">反馈详情</h5>
+                    <h5 class="modal-title" id="feedbackDetailModalLabel">咨询详情</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
                 </div>
                 <div class="modal-body">
@@ -418,7 +425,8 @@
 
     <footer class="py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">© 2025 HAPI预测系统. 保留所有权利.</p>
+            <p class="mb-0">医师回复时间为北京时间8:00-19:00.</p>
+            <p class="mb-0">如您有紧急联系需求，请联系000-00000000.</p>
         </div>
     </footer>
 
@@ -479,16 +487,19 @@
                             switch (feedback.status) {
                                 case 'pending':
                                     statusClass = 'status-pending';
-                                    statusText = '待处理';
+                                    statusText = '高风险';
                                     break;
                                 case 'processing':
                                     statusClass = 'status-processing';
-                                    statusText = '处理中';
+                                    statusText = '中风险';
                                     break;
                                 case 'resolved':
                                     statusClass = 'status-resolved';
-                                    statusText = '已解决';
+                                    statusText = '低风险';
                                     break;
+                                case 'unreaded':
+                                    statusClass = 'status-unreaded';
+                                    statusText = '待回复'
                             }
                             
                             // 创建日期格式化
@@ -503,7 +514,7 @@
                                 
                                 replyHtml = `
                                     <div class="reply-section">
-                                        <h6><i class="bi bi-reply me-2"></i>管理员回复</h6>
+                                        <h6><i class="bi bi-reply me-2"></i>医师回复</h6>
                                         <p>${feedback.reply}</p>
                                         <div class="feedback-timestamp text-end">
                                             回复时间: ${formattedRepliedDate}
@@ -571,7 +582,7 @@
             submitNewFeedback.addEventListener('click', async () => {
                 // 表单验证
                 if (!newFeedbackTitle.value.trim() || !newFeedbackContent.value.trim()) {
-                    newFeedbackMessage.textContent = '请填写完整的反馈信息';
+                    newFeedbackMessage.textContent = '请填写完整的咨询信息';
                     newFeedbackMessage.className = 'alert alert-danger';
                     newFeedbackMessage.style.display = 'block';
                     return;
@@ -598,7 +609,7 @@
                     
                     if (response.ok) {
                         // 提交成功
-                        newFeedbackMessage.textContent = '反馈提交成功！';
+                        newFeedbackMessage.textContent = '咨询提交成功！';
                         newFeedbackMessage.className = 'alert alert-success';
                         
                         // 清空表单
@@ -616,7 +627,7 @@
                         newFeedbackMessage.className = 'alert alert-danger';
                     }
                 } catch (error) {
-                    console.error('提交反馈出错:', error);
+                    console.error('提交咨询出错:', error);
                     newFeedbackMessage.textContent = '网络错误，请检查您的连接';
                     newFeedbackMessage.className = 'alert alert-danger';
                 } finally {
@@ -643,16 +654,19 @@
                 switch (feedback.status) {
                     case 'pending':
                         statusClass = 'status-pending';
-                        statusText = '待处理';
+                        statusText = '高风险';
                         break;
                     case 'processing':
                         statusClass = 'status-processing';
-                        statusText = '处理中';
+                        statusText = '中风险';
                         break;
                     case 'resolved':
                         statusClass = 'status-resolved';
-                        statusText = '已解决';
+                        statusText = '低风险';
                         break;
+                    case 'unreaded':
+                        statusClass = 'status-unreaded';
+                        statusText = '待回复'
                 }
                 
                 // 创建日期格式化
@@ -667,7 +681,7 @@
                     
                     replyHtml = `
                         <div class="reply-section mt-4">
-                            <h5 class="mb-3"><i class="bi bi-reply me-2"></i>管理员回复</h5>
+                            <h5 class="mb-3"><i class="bi bi-reply me-2"></i>医师回复</h5>
                             <p>${feedback.reply}</p>
                             <div class="feedback-timestamp text-end">
                                 回复时间: ${formattedRepliedDate}
@@ -683,10 +697,10 @@
                 detailContent.innerHTML = `
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                         <span class="feedback-status ${statusClass}">${statusText}</span>
-                        <small class="text-muted">反馈ID: ${feedback.id}</small>
+                        <small class="text-muted">咨询ID: ${feedback.id}</small>
                     </div>
                     <div class="mb-4">
-                        <h5>反馈内容</h5>
+                        <h5>咨询内容</h5>
                         <p>${feedback.content.replace(/\n/g, '<br>')}</p>
                         <div class="feedback-timestamp">
                             提交时间: ${formattedDate}
