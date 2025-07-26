@@ -24,7 +24,7 @@ from Predict.app.services.db import get_db
 from Predict.app.services.auth import get_current_user
 from Predict.app.models.user import User
 from Predict.app.models.chat_history import ChatHistory, ChatMessage
-from Predict.app.services.model_service import model_service
+# from Predict.app.services.model_service import model_service
 
 # 配置日志
 logger = logging.getLogger(__name__)

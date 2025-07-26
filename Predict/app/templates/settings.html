@@ -25,6 +25,54 @@
             }
         })();
     </script>
+    <!-- 权限检查脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('设置页面 - DOM加载完成，开始权限检查');
+            
+            // 立即执行权限检查
+            const userRole = localStorage.getItem('user_role');
+            console.log('当前用户角色:', userRole);
+            
+            if (userRole === 'admin') {
+                console.log('检测到管理员，立即显示管理员功能');
+                
+                // 立即显示管理员功能
+                const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                adminElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.setProperty('display', 'block', 'important');
+                        element.removeAttribute('style');
+                        element.style.display = 'block';
+                        console.log(`强制显示元素: ${id}`);
+                    }
+                });
+            }
+            
+            // 等待authManager初始化
+            setTimeout(function() {
+                if (window.authManager) {
+                    console.log('authManager已初始化，执行权限检查');
+                    window.authManager.updateUIElements();
+                } else {
+                    console.error('authManager未找到');
+                }
+                
+                // 再次强制检查
+                if (userRole === 'admin') {
+                    const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                    adminElements.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element && window.getComputedStyle(element).display === 'none') {
+                            console.log(`元素 ${id} 仍然隐藏，强制显示`);
+                            element.style.setProperty('display', 'block', 'important');
+                        }
+                    });
+                }
+            }, 500);
+        });
+    </script>
     <style>
         /* 添加动画效果 - 与dashboard.html一致 */
         .animate-fade-in {
@@ -87,13 +135,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="batchPredictLink" style="display: none;">
                         <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="dataDashboardLink" style="display: none;">
                         <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
                     </li>
                     <li class="nav-item">

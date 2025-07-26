@@ -27,13 +27,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="batchPredictLink" style="display: none;">
                         <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="dataDashboardLink" style="display: none;">
                         <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
                     </li>
                     <li class="nav-item">
@@ -78,13 +78,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 animate-fade-in-delay-2">
+            <div class="col-md-4 animate-fade-in-delay-2" id="batchPredictCard" style="display: none;">
                 <div class="feature-card" onclick="window.location.href='/predictor/batch'">
                     <div class="card-body text-center">
                         <i class="bi bi-people"></i>
                         <h3 class="card-title">多例风险预测</h3>
                         <p class="card-text">上传包含多个患者数据的表格文件进行多例预测</p>
-                        <button class="btn" style="background-color: #212529; color: white; border-color: #212529; border-radius: 20px; padding: 0.5rem 1.5rem;">开始多例预测</button>
+                        <button class="btn btn-success">批量预测</button>
                     </div>
                 </div>
             </div>
@@ -92,9 +92,33 @@
                 <div class="feature-card" onclick="window.location.href='/medical-qa'">
                     <div class="card-body text-center">
                         <i class="bi bi-chat-dots"></i>
-                        <h3 class="card-title">医疗专家问答</h3>
-                        <p class="card-text">与AI医疗助手进行专业医疗咨询</p>
-                        <button class="btn btn-success">开始咨询</button>
+                        <h3 class="card-title">智能医疗问答</h3>
+                        <p class="card-text">基于医学知识库的智能问答系统</p>
+                        <button class="btn btn-info">开始咨询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据分析功能卡片（仅管理员可见） -->
+        <div class="row mb-4" id="adminFeaturesRow" style="display: none;">
+            <div class="col-md-6 animate-fade-in-delay-4">
+                <div class="feature-card" onclick="window.location.href='/data-dashboard'">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up"></i>
+                        <h3 class="card-title">数据看板</h3>
+                        <p class="card-text">查看系统使用统计和预测数据分析</p>
+                        <button class="btn btn-warning">查看数据</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 animate-fade-in-delay-5">
+                <div class="feature-card" onclick="window.location.href='/admin'">
+                    <div class="card-body text-center">
+                        <i class="bi bi-shield-lock"></i>
+                        <h3 class="card-title">管理控制台</h3>
+                        <p class="card-text">用户管理和系统配置</p>
+                        <button class="btn btn-danger">管理系统</button>
                     </div>
                 </div>
             </div>
@@ -168,5 +192,54 @@
     <!-- 引入JavaScript文件 -->
     <script src="/static/js/auth.js"></script>
     <script src="/static/js/dashboard.js"></script>
+    
+    <!-- 权限检查脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，开始权限检查');
+            
+            // 立即执行权限检查
+            const userRole = localStorage.getItem('user_role');
+            console.log('当前用户角色:', userRole);
+            
+            if (userRole === 'admin') {
+                console.log('检测到管理员，立即显示管理员功能');
+                
+                // 立即显示管理员功能
+                const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                adminElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.setProperty('display', 'block', 'important');
+                        element.removeAttribute('style');
+                        element.style.display = 'block';
+                        console.log(`强制显示元素: ${id}`);
+                    }
+                });
+            }
+            
+            // 等待authManager初始化
+            setTimeout(function() {
+                if (window.authManager) {
+                    console.log('authManager已初始化，执行权限检查');
+                    window.authManager.updateUIElements();
+                } else {
+                    console.error('authManager未找到');
+                }
+                
+                // 再次强制检查
+                if (userRole === 'admin') {
+                    const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                    adminElements.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element && window.getComputedStyle(element).display === 'none') {
+                            console.log(`元素 ${id} 仍然隐藏，强制显示`);
+                            element.style.setProperty('display', 'block', 'important');
+                        }
+                    });
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html> 

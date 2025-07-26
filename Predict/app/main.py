@@ -53,7 +53,7 @@ app.add_middleware(
 )
 
 # 导入路由和服务
-from Predict.app.api import model_management, upload, websocket, auth, medical_qa, dashboard, feedback, predictor
+from Predict.app.api import websocket, auth, medical_qa, dashboard, feedback, predictor
 from Predict.app.services.db import create_tables, get_db
 from Predict.app.services.auth import get_current_user, SECRET_KEY, ALGORITHM
 from Predict.app.models.user import User
@@ -61,9 +61,6 @@ from Predict.app.services import predictor_service
 from Predict.app.api import data_dashboard  # 导入数据看板API
 from Predict.app.services import db  # 导入数据库服务
 
-# 注册路由
-app.include_router(model_management.router, prefix="/api/models", tags=["模型管理"])
-app.include_router(upload.router, prefix="/api/upload", tags=["文件上传"])
 app.include_router(websocket.router, prefix="/api/ws", tags=["WebSocket"])
 app.include_router(auth.router, prefix="/api/auth", tags=["认证"])
 app.include_router(medical_qa.router, prefix="/api/medical", tags=["医疗问答"])
@@ -148,30 +145,42 @@ async def register_page(request: Request):
 @app.get("/predictor/single")
 async def single_predict_page(request: Request, current_user: User = Depends(get_current_user)):
     """渲染单例预测页面"""
-    return templates.TemplateResponse("predictor/index.html", { 
+    return templates.TemplateResponse("predictor/single_predict.html", {
         "request": request, 
         "username": current_user.username,
         "now": datetime.datetime.now() 
     })
 
-# 批量预测页面路由
+# 批量预测页面路由（仅管理员可访问）
 @app.get("/predictor/batch")
 async def batch_predict_page(request: Request, current_user: User = Depends(get_current_user)):
-    """渲染批量预测上传页面"""
+    """渲染批量预测上传页面（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限访问批量预测功能"
+        )
     return templates.TemplateResponse("predictor/batch_predict.html", { 
         "request": request, 
         "username": current_user.username,
         "now": datetime.datetime.now()
     })
 
-# 批量预测结果页面路由
+# 批量预测结果页面路由（仅管理员可访问）
 @app.get("/predictor/batch_results/{batch_id}")
 async def batch_results_page(
     batch_id: str, 
     request: Request, 
     current_user: User = Depends(get_current_user)
 ):
-    """渲染批量预测结果页面"""
+    """渲染批量预测结果页面（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限访问批量预测结果"
+        )
     # 检查结果文件是否存在
     result_filename = f"batch_{batch_id}_results.xlsx"
     result_filepath = predictor_service.BATCH_RESULTS_DIR / result_filename
@@ -228,10 +237,16 @@ async def medical_qa_page(request: Request):
     """渲染医疗问答页面"""
     return templates.TemplateResponse("medical_qa.html", {"request": request})
 
-# 数据看板页面路由
+# 数据看板页面路由（仅管理员可访问）
 @app.get("/data-dashboard")
 async def data_dashboard_page(request: Request, current_user: User = Depends(get_current_user)):
-    """渲染数据看板页面"""
+    """渲染数据看板页面（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限访问数据看板功能"
+        )
     return templates.TemplateResponse("data_dashboard.html", {
         "request": request,
         "username": current_user.username
@@ -257,7 +272,7 @@ async def about_page(request: Request):
 async def admin_page(request: Request, current_user: User = Depends(get_current_user)):
     """渲染管理员页面"""
     # 检查用户是否是管理员
-    if not current_user.is_admin:
+    if not current_user.role:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="需要管理员权限"
@@ -283,7 +298,7 @@ async def api_root():
     return {
         "message": "欢迎使用HAPI预测系统API",
         "documentation": "/docs",
-        "version": "1.0.0"
+        "version": "2.1.0"
     }
 
 # 健康检查路由

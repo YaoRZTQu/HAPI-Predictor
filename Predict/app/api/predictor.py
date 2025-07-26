@@ -144,12 +144,18 @@ async def download_single_report(report_id: str, current_user: User = Depends(ge
 
 # --- 批量预测 API --- 
 @router.post("/batch_predict")
-async def run_batch_prediction(
-    request: Request,
-    current_user: User = Depends(get_current_user),
-    file: UploadFile = File(...)
+async def run_batch_prediction_with_all_models(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
 ):
-    """接收上传的批量预测文件 (CSV/Excel)，使用所有可用模型执行预测并返回综合结果。"""
+    """批量预测API（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限执行批量预测"
+        )
+    
     predictor_service.logger.info(f"接收到批量预测请求，文件：{file.filename}, 文件大小：{file.size if hasattr(file, 'size') else '未知'}")
     predictor_service.logger.info(f"请求头：{dict(request.headers)}")
     
@@ -238,8 +244,18 @@ async def run_batch_prediction(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="处理批量预测时发生内部错误。")
 
 @router.get("/download_batch_results/{batch_id}")
-async def download_batch_results(batch_id: str, current_user: User = Depends(get_current_user)):
-    """根据批处理 ID 下载对应的结果文件。"""
+async def download_batch_results(
+    batch_id: str, 
+    current_user: User = Depends(get_current_user)
+):
+    """下载批量预测结果（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限下载批量预测结果"
+        )
+    
     result_filename = f"batch_{batch_id}_results.xlsx"
     result_filepath = predictor_service.BATCH_RESULTS_DIR / result_filename
 

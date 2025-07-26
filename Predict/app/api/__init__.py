@@ -8,4 +8,4 @@ HAPI预测系统API模块
 - medical_analysis: 医学图像分析API
 """
 
-from . import model_management, upload, websocket, auth
+from . import websocket, auth

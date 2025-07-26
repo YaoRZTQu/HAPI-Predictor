@@ -1,5 +1,7 @@
 // 导入主题和辅助功能设置
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    updateDashboardUI();
+    
     // 从页面模板获取用户名
     const usernameSpan = document.getElementById('username');
     const usernameFromServer = usernameSpan.textContent.trim();
@@ -31,4 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/login';
         }
     });
-}); 
+});  // 检查用户权限并显示相应功能
+function updateDashboardUI() {
+    const userRole = localStorage.getItem('user_role');
+    const batchPredictCard = document.getElementById('batchPredictCard');
+    const adminFeaturesRow = document.getElementById('adminFeaturesRow');
+    
+    if (userRole === 'admin') {
+        // 管理员用户显示所有功能
+        if (batchPredictCard) batchPredictCard.style.display = 'block';
+        if (adminFeaturesRow) adminFeaturesRow.style.display = 'flex';
+    } else {
+        // 普通用户隐藏管理员功能
+        if (batchPredictCard) batchPredictCard.style.display = 'none';
+        if (adminFeaturesRow) adminFeaturesRow.style.display = 'none';
+    }
+}

@@ -473,20 +473,7 @@ def get_risk_level(probabilities: list[float]) -> str:
         return '低风险'
 
 def prepare_batch_input(df: pd.DataFrame) -> pd.DataFrame:
-    """准备批量预测的输入数据。
-    
-    此函数对输入的数据框进行必要的预处理，包括：
-    1. 应用字段映射（使用FIELD_MAPPING）
-    2. 对分类变量进行编码（使用CATEGORY_MAPPING）
-    3. 处理缺失值
-    4. 确保特征顺序一致
-    
-    Args:
-        df: 原始输入数据框
-        
-    Returns:
-        处理后的用于预测的数据框
-    """
+    """准备批量预测的输入数据。"""
     logger.info(f"准备批量输入数据，原始数据包含 {len(df)} 行, {len(df.columns)} 列")
     
     # 创建处理后的数据框的副本
@@ -512,63 +499,28 @@ def prepare_batch_input(df: pd.DataFrame) -> pd.DataFrame:
         
         # 2. 对分类变量进行编码
         for cat_field, mapping in CATEGORY_MAPPING.items():
-            # 确保我们使用最终的字段名称（可能已经映射过）
-            field_to_use = FIELD_MAPPING.get(cat_field, cat_field)
-            
-            if field_to_use in processed_df.columns:
-                logger.info(f"对分类变量进行编码: {field_to_use}")
+            if cat_field in processed_df.columns:
+                logger.info(f"对分类变量进行编码: {cat_field}")
                 
                 # 检查并替换不在映射中的值
-                invalid_values = processed_df[field_to_use].dropna().unique().tolist()
+                invalid_values = processed_df[cat_field].dropna().unique().tolist()
                 invalid_values = [v for v in invalid_values if v not in mapping]
                 
                 if invalid_values:
-                    logger.warning(f"字段 {field_to_use} 包含未知值: {invalid_values}，将被替换为默认值")
-                    # 对于未知值，我们使用映射中的第一个值作为默认值
+                    logger.warning(f"字段 {cat_field} 包含未知值: {invalid_values}，将被替换为默认值")
                     default_value = list(mapping.keys())[0]
-                    processed_df.loc[processed_df[field_to_use].isin(invalid_values), field_to_use] = default_value
+                    processed_df.loc[processed_df[cat_field].isin(invalid_values), cat_field] = default_value
                 
-                # 进行编码
-                processed_df[field_to_use] = processed_df[field_to_use].map(mapping)
-                
-                # 处理可能的NaN值（例如，如果有些值不在映射中）
-                if processed_df[field_to_use].isna().any():
-                    # 对于NaN值，我们使用映射中的第一个值
-                    default_encoded = list(mapping.values())[0]
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(default_encoded)
+                # 应用编码映射
+                processed_df[cat_field] = processed_df[cat_field].map(mapping)
         
-        # 3. 处理数值字段的缺失值和异常值
+        # 3. 处理数值型字段的缺失值和类型转换
         for num_field in NUMERIC_FIELDS:
-            # 确保我们使用最终的字段名称
-            field_to_use = FIELD_MAPPING.get(num_field, num_field)
-            
-            if field_to_use in processed_df.columns:
-                logger.info(f"处理数值字段: {field_to_use}")
-                
-                # 尝试将字段转换为数值类型
-                try:
-                    processed_df[field_to_use] = pd.to_numeric(processed_df[field_to_use], errors='coerce')
-                except Exception as e:
-                    logger.error(f"转换字段 {field_to_use} 为数值类型时出错: {e}")
-                
-                # 根据字段填充缺失值
-                if field_to_use == '住院时长' or field_to_use == '住院第几天':
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(7)  # 默认7天
-                elif field_to_use == '白细胞' or field_to_use == '白细胞计数':
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(7.0)  # 默认7.0
-                elif field_to_use == '血钾' or field_to_use == '血钾浓度':
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(4.0)  # 默认4.0
-                elif field_to_use == '白蛋白' or field_to_use == '白蛋白计数':
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(40.0)  # 默认40.0
-                else:
-                    # 对于其他数值字段，使用中位数填充
-                    median_value = processed_df[field_to_use].median()
-                    if pd.isna(median_value):  # 如果中位数也是NaN，使用0
-                        median_value = 0
-                    processed_df[field_to_use] = processed_df[field_to_use].fillna(median_value)
-                
-                # 检查并处理极端值（可选）
-                # 这里可以添加处理极端值的逻辑，例如截断等
+            if num_field in processed_df.columns:
+                # 转换为数值类型，无效值变为NaN
+                processed_df[num_field] = pd.to_numeric(processed_df[num_field], errors='coerce')
+                # 用0填充NaN值
+                processed_df[num_field] = processed_df[num_field].fillna(0)
         
         # 4. 确保特征顺序与模型预期一致
         final_features = []
@@ -579,16 +531,15 @@ def prepare_batch_input(df: pd.DataFrame) -> pd.DataFrame:
                 logger.error(f"处理后的数据中缺少预期特征: {feature}")
                 raise ValueError(f"无法在处理后的数据中找到必要特征: {feature}")
         
-        # 创建最终的特征数据框
+        # 创建最终的特征数据框（仅包含预测特征）
         final_df = processed_df[final_features].copy()
         
-        # 检查是否存在NaN值，如果存在则填充0
+        # 最终检查NaN值
         if final_df.isna().any().any():
             logger.warning("最终数据框中仍存在NaN值，使用0填充")
             final_df = final_df.fillna(0)
         
         logger.info(f"批量输入数据准备完成，最终数据包含 {len(final_df)} 行, {len(final_df.columns)} 列")
-        logger.debug(f"最终特征列: {final_df.columns.tolist()}")
         
         return final_df
     
@@ -652,9 +603,10 @@ def generate_template_file() -> BytesIO:
         # 创建模板文件的字段列表
         columns = []
         
-        # 添加序号与可选ID字段（如果有）
+        # 添加患者标识字段（新增）
+        columns.append("患者ID")
+        columns.append("患者姓名")
         columns.append("序号")
-        columns.append("患者ID")  # 可选字段，用于标识患者
         columns.append("年龄")    # 可选字段
         
         # 添加所有数值型字段
@@ -673,8 +625,9 @@ def generate_template_file() -> BytesIO:
         # 添加2个示例行
         for i in range(1, 3):
             row = {
-                "序号": i,
                 "患者ID": f"P{10000 + i}",  # 示例患者ID
+                "患者姓名": f"张{i}",  # 示例患者姓名
+                "序号": i,
                 "年龄": 70 + i,
                 "住院第几天": 3 + i,
                 "白细胞计数": 7.5,
@@ -964,15 +917,7 @@ def predict_batch_with_all_models(df: pd.DataFrame) -> dict:
     }
 
 async def process_batch_file_with_all_models(file: UploadFile) -> tuple[str, Path]:
-    """使用所有可用模型处理批量预测文件，生成综合结果。
-    
-    Args:
-        file: 上传的CSV或Excel文件
-        
-    Returns:
-        batch_id: 批处理任务ID
-        result_filepath: 结果文件的路径
-    """
+    """使用所有可用模型处理批量预测文件，生成综合结果。"""
     # 随机生成批处理任务ID
     batch_id = str(uuid.uuid4())
     logger.info(f"开始批量预测任务 {batch_id}")
@@ -990,42 +935,61 @@ async def process_batch_file_with_all_models(file: UploadFile) -> tuple[str, Pat
         content = await file.read()
         
         if ext == '.csv':
-            # 对于CSV文件，使用StringIO
-            input_df = pd.read_csv(BytesIO(content))
+            try:
+                input_df = pd.read_csv(BytesIO(content), encoding='utf-8')
+            except UnicodeDecodeError:
+                input_df = pd.read_csv(BytesIO(content), encoding='gbk')
         elif ext in ['.xlsx', '.xls']:
-            # 对于Excel文件，使用BytesIO
             input_df = pd.read_excel(BytesIO(content))
         else:
             raise ValueError(f"不支持的文件类型: {ext}")
         
+        if input_df.empty:
+            raise ValueError("上传的文件为空或无法读取。")
+        
         logger.info(f"成功读取文件，包含 {len(input_df)} 行数据")
         
-        # 检查是否有实际标签列（用于评估），然后将其分离
+        # 保留患者标识信息（如果存在）
+        patient_info_fields = ["患者ID", "患者姓名", "序号", "年龄"]
+        patient_info = {}
+        for field in patient_info_fields:
+            if field in input_df.columns:
+                patient_info[field] = input_df[field].copy()
+                logger.info(f"保留患者标识字段: {field}")
+        
+        # 检查是否有实际标签列（用于评估）
         has_actual_labels = False
         actual_labels = None
-        
         if "actual_label" in input_df.columns:
             has_actual_labels = True
             actual_labels = input_df["actual_label"].copy()
             input_df = input_df.drop(columns=["actual_label"])
             logger.info("检测到actual_label列，将进行模型评估")
         
-        # 数据预处理
+        # 数据预处理（仅处理预测相关字段）
         processed_df = prepare_batch_input(input_df)
         
         # 使用所有模型进行预测
         prediction_results = predict_batch_with_all_models(processed_df)
         
         # 创建输出数据框
-        result_df = input_df.copy()
+        result_df = pd.DataFrame()
         
-        # 添加各模型的预测概率列和预测结果列
+        # 首先添加患者标识字段（如果存在）
+        for field in patient_info_fields:
+            if field in patient_info:
+                result_df[field] = patient_info[field]
+        
+        # 添加原始输入数据的其他字段（排除患者标识字段和actual_label）
+        for col in input_df.columns:
+            if col not in patient_info_fields and col != "actual_label":
+                result_df[col] = input_df[col]
+        
+        # 添加各模型的预测结果
         for model_key in prediction_results["model_predictions"]:
             if model_key in MODEL_NAMES:
                 model_name = MODEL_NAMES[model_key]
-                # 添加预测概率
                 result_df[f"{model_name}_概率"] = prediction_results["model_probabilities"][model_key]
-                # 添加预测结果
                 result_df[f"{model_name}_预测"] = prediction_results["model_predictions"][model_key]
         
         # 添加综合结果
@@ -1033,57 +997,13 @@ async def process_batch_file_with_all_models(file: UploadFile) -> tuple[str, Pat
         result_df["综合预测结果"] = prediction_results["ensemble_predictions"]
         result_df["风险级别"] = prediction_results["risk_levels"]
         
-        # 如果有真实标签，添加评估指标
+        # 如果有真实标签，添加到结果中
         if has_actual_labels and actual_labels is not None:
-            # 将真实标签添加回数据框
             result_df["真实标签"] = actual_labels
-            
-            # 计算模型评估指标
-            try:
-                from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-                
-                # 过滤掉None值以进行评估
-                valid_indices = [i for i, pred in enumerate(prediction_results["ensemble_predictions"]) 
-                                if pred is not None and not pd.isna(actual_labels[i])]
-                
-                if valid_indices:
-                    valid_preds = [prediction_results["ensemble_predictions"][i] for i in valid_indices]
-                    valid_probas = [prediction_results["ensemble_probabilities"][i] for i in valid_indices]
-                    valid_labels = [actual_labels[i] for i in valid_indices]
-                    
-                    # 在结果文件的第二个sheet中添加评估指标
-                    metrics = {
-                        "准确率(Accuracy)": accuracy_score(valid_labels, valid_preds),
-                        "精确率(Precision)": precision_score(valid_labels, valid_preds, zero_division=0),
-                        "召回率(Recall)": recall_score(valid_labels, valid_preds, zero_division=0),
-                        "F1分数": f1_score(valid_labels, valid_preds, zero_division=0),
-                        "AUC": roc_auc_score(valid_labels, valid_probas) if len(set(valid_labels)) > 1 else 0
-                    }
-                    
-                    # 创建评估指标数据框
-                    metrics_df = pd.DataFrame({
-                        "指标名称": list(metrics.keys()),
-                        "值": list(metrics.values())
-                    })
-                    
-                    # 保存结果到Excel的两个sheets
-                    with pd.ExcelWriter(result_filepath) as writer:
-                        result_df.to_excel(writer, sheet_name="预测结果", index=False)
-                        metrics_df.to_excel(writer, sheet_name="评估指标", index=False)
-                        
-                    logger.info(f"带评估指标的批量预测结果已保存到 {result_filepath}")
-                else:
-                    # 如果没有有效的预测数据，仅保存预测结果
-                    result_df.to_excel(result_filepath, index=False)
-                    logger.warning("无法计算评估指标：无有效预测或标签")
-            except Exception as eval_err:
-                logger.error(f"计算评估指标时出错: {eval_err}")
-                # 仅保存预测结果
-                result_df.to_excel(result_filepath, index=False)
-        else:
-            # 保存结果
-            result_df.to_excel(result_filepath, index=False)
-            logger.info(f"批量预测结果已保存到 {result_filepath}")
+        
+        # 保存结果
+        result_df.to_excel(result_filepath, index=False, engine='openpyxl')
+        logger.info(f"批量预测结果已保存到 {result_filepath}")
         
         return batch_id, result_filepath
     

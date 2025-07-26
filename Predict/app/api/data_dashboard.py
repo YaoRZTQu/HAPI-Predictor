@@ -25,7 +25,14 @@ logger = logging.getLogger(__name__)
 
 @router.get("/stats")
 async def get_dashboard_stats(current_user: TokenData = Depends(auth.get_current_user)):
-    """获取数据看板统计数据"""
+    """获取数据看板统计数据（仅管理员可访问）"""
+    # 检查用户是否是管理员
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限访问数据看板统计"
+        )
+    
     try:
         # 获取预测总次数
         prediction_count = await db.get_prediction_count()

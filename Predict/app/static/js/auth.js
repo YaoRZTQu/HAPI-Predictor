@@ -22,7 +22,9 @@ class AuthManager {
         
         // 仅管理员可访问的路径
         this.adminPaths = [
-            '/admin'
+            '/admin',
+            '/predictor/batch',
+            '/data-dashboard'
         ];
         
         // 初始化
@@ -72,14 +74,12 @@ class AuthManager {
     }
     
     /**
-     * 判断用户是否是管理员
+     * 检查当前用户是否是管理员
      */
     isAdmin() {
-        // 添加调试日志
-        console.log('检查管理员权限');
-        console.log('用户角色: ' + localStorage.getItem(this.roleKey));
-        
-        return this.isLoggedIn() && localStorage.getItem(this.roleKey) === 'admin';
+        const userRole = this.getUserRole();
+        console.log('检查管理员权限，当前角色:', userRole);
+        return userRole === 'admin';
     }
     
     /**
@@ -136,24 +136,87 @@ class AuthManager {
      * 更新页面上的UI元素
      */
     updateUIElements() {
+        console.log('开始更新UI元素');
+        
         // 显示当前用户名
         const usernameElement = document.getElementById('currentUsername');
         if (usernameElement) {
             usernameElement.textContent = this.getUsername() || '用户';
         }
         
-        // 根据用户角色显示或隐藏管理员入口
+        // 获取管理员功能元素
         const adminLink = document.getElementById('adminLink');
-        if (adminLink) {
-            if (this.isAdmin()) {
-                console.log('当前用户是管理员，显示管理控制台按钮');
+        const batchPredictLink = document.getElementById('batchPredictLink');
+        const dataDashboardLink = document.getElementById('dataDashboardLink');
+        
+        // 获取仪表盘页面的管理员功能卡片
+        const batchPredictCard = document.getElementById('batchPredictCard');
+        const adminFeaturesRow = document.getElementById('adminFeaturesRow');
+        
+        console.log('当前用户角色:', this.getUserRole());
+        console.log('是否为管理员:', this.isAdmin());
+        console.log('找到的元素:', {
+            adminLink: !!adminLink,
+            batchPredictLink: !!batchPredictLink,
+            dataDashboardLink: !!dataDashboardLink,
+            batchPredictCard: !!batchPredictCard,
+            adminFeaturesRow: !!adminFeaturesRow
+        });
+        
+        if (this.isAdmin()) {
+            console.log('当前用户是管理员，显示管理员功能');
+            // 显示导航栏管理员专用功能
+            if (adminLink) {
                 adminLink.style.display = 'block';
+                console.log('显示管理控制台链接');
+            }
+            if (batchPredictLink) {
+                batchPredictLink.style.display = 'block';
+                console.log('显示批量预测链接');
             } else {
-                console.log('当前用户不是管理员，隐藏管理控制台按钮');
-                adminLink.style.display = 'none';
+                console.warn('batchPredictLink 元素不存在');
+            }
+            if (dataDashboardLink) {
+                dataDashboardLink.style.display = 'block';
+                console.log('显示数据看板链接');
+            } else {
+                console.warn('dataDashboardLink 元素不存在');
+            }
+            
+            // 显示仪表盘页面的管理员功能卡片
+            if (batchPredictCard) {
+                batchPredictCard.style.display = 'block';
+                console.log('显示批量预测卡片');
+            }
+            if (adminFeaturesRow) {
+                adminFeaturesRow.style.display = 'flex';
+                console.log('显示管理员功能行');
             }
         } else {
-            console.log('未找到管理员链接元素');
+            console.log('当前用户不是管理员，隐藏管理员功能');
+            // 隐藏导航栏管理员专用功能
+            if (adminLink) {
+                adminLink.style.display = 'none';
+                console.log('隐藏管理控制台链接');
+            }
+            if (batchPredictLink) {
+                batchPredictLink.style.display = 'none';
+                console.log('隐藏批量预测链接');
+            }
+            if (dataDashboardLink) {
+                dataDashboardLink.style.display = 'none';
+                console.log('隐藏数据看板链接');
+            }
+            
+            // 隐藏仪表盘页面的管理员功能卡片
+            if (batchPredictCard) {
+                batchPredictCard.style.display = 'none';
+                console.log('隐藏批量预测卡片');
+            }
+            if (adminFeaturesRow) {
+                adminFeaturesRow.style.display = 'none';
+                console.log('隐藏管理员功能行');
+            }
         }
     }
     
@@ -178,10 +241,12 @@ class AuthManager {
     }
     
     /**
-     * 获取当前用户角色
+     * 获取用户角色
      */
     getUserRole() {
-        return localStorage.getItem(this.roleKey) || 'user';
+        const role = localStorage.getItem('user_role');
+        console.log('获取用户角色:', role);
+        return role;
     }
     
     // 通用的fetch方法，自动添加认证头
@@ -205,6 +270,28 @@ class AuthManager {
         
         return fetch(url, fetchOptions);
     }
+
+    /**
+     * 登录成功后的处理
+     */
+    async handleLoginSuccess(data) {
+        // 保存认证信息
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('token_type', data.token_type);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('user_role', data.role || 'user'); // 确保保存角色信息
+        
+        console.log('登录成功，保存的用户信息:', {
+            username: data.username,
+            role: data.role || 'user'
+        });
+        
+        // 立即更新UI元素
+        this.updateUIElements();
+        
+        // 重定向到仪表盘
+        window.location.href = '/dashboard';
+    }
 }
 
 // 创建全局认证管理器实例
@@ -226,6 +313,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // 立即更新UI元素
     authManager.updateUIElements();
 });
-
-// 导出认证管理器
-window.authManager = authManager; 

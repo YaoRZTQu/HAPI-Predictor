@@ -326,7 +326,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOptional">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
-                            <strong>可选字段</strong>
+                            <strong>患者标识字段</strong>
                         </button>
                     </h2>
                     <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#fieldsAccordion">
@@ -337,30 +337,35 @@
                                         <tr>
                                             <th>字段名称</th>
                                             <th>说明</th>
-                                            <th>有效值</th>
+                                            <th>示例</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>患者ID</td>
+                                            <td>患者的唯一标识符（不参与预测）</td>
+                                            <td>P10001, ID001</td>
+                                        </tr>
+                                        <tr>
+                                            <td>患者姓名</td>
+                                            <td>患者姓名（不参与预测）</td>
+                                            <td>张三, 李四</td>
+                                        </tr>
+                                        <tr>
                                             <td>序号</td>
-                                            <td>数据记录的唯一标识符</td>
-                                            <td>整数 (1, 2, 3...)</td>
+                                            <td>数据记录的序号</td>
+                                            <td>1, 2, 3...</td>
                                         </tr>
                                         <tr>
                                             <td>年龄</td>
-                                            <td>患者年龄</td>
-                                            <td>整数 (通常范围: 60-100)</td>
-                                        </tr>
-                                        <tr>
-                                            <td>actual_label</td>
-                                            <td>真实的压伤风险标签（如有）</td>
-                                            <td><code>0</code> (无风险) / <code>1</code> (有风险)</td>
+                                            <td>患者年龄（可选）</td>
+                                            <td>65, 72, 80</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="alert alert-secondary mt-3">
-                                <i class="bi bi-lightbulb me-2"></i>若提供 <code>actual_label</code> 列，系统将计算评估指标并生成ROC曲线及混淆矩阵等可视化图表。
+                            <div class="alert alert-info mt-3">
+                                <i class="bi bi-info-circle me-2"></i>患者ID和姓名字段仅用于结果标识，不会参与模型预测计算。
                             </div>
                         </div>
                     </div>
@@ -535,6 +540,51 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+    
+    // 权限检查脚本
+    console.log('批量预测页面 - DOM加载完成，开始权限检查');
+    
+    // 立即执行权限检查
+    const userRole = localStorage.getItem('user_role');
+    console.log('当前用户角色:', userRole);
+    
+    if (userRole === 'admin') {
+        console.log('检测到管理员，立即显示管理员功能');
+        
+        // 立即显示管理员功能
+        const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+        adminElements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.setProperty('display', 'block', 'important');
+                element.removeAttribute('style');
+                element.style.display = 'block';
+                console.log(`强制显示元素: ${id}`);
+            }
+        });
+    }
+    
+    // 等待authManager初始化
+    setTimeout(function() {
+        if (window.authManager) {
+            console.log('authManager已初始化，执行权限检查');
+            window.authManager.updateUIElements();
+        } else {
+            console.error('authManager未找到');
+        }
+        
+        // 再次强制检查
+        if (userRole === 'admin') {
+            const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+            adminElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && window.getComputedStyle(element).display === 'none') {
+                    console.log(`元素 ${id} 仍然隐藏，强制显示`);
+                    element.style.setProperty('display', 'block', 'important');
+                }
+            });
+        }
+    }, 500);
 });
 
 // 添加样式

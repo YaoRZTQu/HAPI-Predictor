@@ -75,13 +75,13 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.url.path == '/predictor/single' %}active{% endif %}" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="batchPredictLink" style="display: none;">
                         <a class="nav-link {% if request.url.path == '/predictor/batch' %}active{% endif %}" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="dataDashboardLink" style="display: none;">
                         <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
                     </li>
                     <li class="nav-item">
