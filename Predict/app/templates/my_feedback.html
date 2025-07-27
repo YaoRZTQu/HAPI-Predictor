@@ -301,15 +301,15 @@
                         <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/reconstruction"><i class="bi bi-image" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/online-training"><i class="bi bi-gear-fill" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                    <li class="nav-item" id="batchPredictLink" style="display: none;">
+                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="dataDashboardLink" style="display: none;">
                         <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
                     </li>
                     <li class="nav-item">
@@ -322,7 +322,7 @@
                         <a class="nav-link active" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
-                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 管理控制台</a>
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
@@ -712,6 +712,54 @@
                 // 显示modal
                 modal.show();
             }
+        });
+    </script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，开始权限检查');
+
+            // 立即执行权限检查
+            const userRole = localStorage.getItem('user_role');
+            console.log('当前用户角色:', userRole);
+
+            if (userRole === 'admin') {
+                console.log('检测到管理员，立即显示管理员功能');
+
+                // 立即显示管理员功能
+                const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                adminElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.setProperty('display', 'block', 'important');
+                        element.removeAttribute('style');
+                        element.style.display = 'block';
+                        console.log(`强制显示元素: ${id}`);
+                    }
+                });
+            }
+
+            // 等待authManager初始化
+            setTimeout(function() {
+                if (window.authManager) {
+                    console.log('authManager已初始化，执行权限检查');
+                    window.authManager.updateUIElements();
+                } else {
+                    console.error('authManager未找到');
+                }
+
+                // 再次强制检查
+                if (userRole === 'admin') {
+                    const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
+                    adminElements.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element && window.getComputedStyle(element).display === 'none') {
+                            console.log(`元素 ${id} 仍然隐藏，强制显示`);
+                            element.style.setProperty('display', 'block', 'important');
+                        }
+                    });
+                }
+            }, 500);
         });
     </script>
 </body>

@@ -148,28 +148,28 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="age" class="form-label">年龄（岁）</label>
-                                    <input type="number" class="form-control" id="age" name="年龄" required min="0" max="120">
+                                    <input type="number" class="form-control" id="age" name="年龄" value = "60" required min="0" max="120">
                                 </div>
                                 <div class="mb-3">
                                     <label for="hospital_stay" class="form-label">住院第几天（天）</label>
-                                    <input type="number" class="form-control" id="hospital_stay" name="住院第几天" required min="1">
+                                    <input type="number" class="form-control" id="hospital_stay" name="住院第几天" value = "5" required min="1">
                                     <div class="invalid-feedback">请输入有效的住院天数 (>=1)。</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="wbc" class="form-label">白细胞计数（×10^9/L）</label>
-                                    <input type="number" class="form-control" id="wbc" name="白细胞计数" step="0.1" required>
+                                    <label for="wbc" class="form-label">白细胞计数（×10^9/L,4.0-10.0）</label>
+                                    <input type="number" class="form-control" id="wbc" name="白细胞计数" step="0.1" value = "5.7" required max = "1000">
                                     <div class="invalid-feedback">请输入白细胞计数。</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="potassium" class="form-label">血钾浓度（mmol/L）</label>
-                                    <input type="number" class="form-control" id="potassium" name="血钾浓度" step="0.1" required>
+                                    <label for="potassium" class="form-label">血钾浓度（mmol/L,3.5-5.5）</label>
+                                    <input type="number" class="form-control" id="potassium" name="血钾浓度" step="0.1" value = "6.5" required max = "100">
                                     <div class="invalid-feedback">请输入血钾浓度。</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="albumin" class="form-label">白蛋白计数（g/L）</label>
-                                    <input type="number" class="form-control" id="albumin" name="白蛋白计数" step="0.1" required>
+                                    <label for="albumin" class="form-label">白蛋白计数（g/L,35-50）</label>
+                                    <input type="number" class="form-control" id="albumin" name="白蛋白计数" step="0.1" value = "57.8" required max = "1000">
                                     <div class="invalid-feedback">请输入白蛋白计数。</div>
                                 </div>
                                 <div class="mb-3">
@@ -180,7 +180,7 @@
                                             <label class="form-check-label" for="smoking_no">无</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="吸烟史" id="smoking_yes" value="有">
+                                            <input class="form-check-input" type="radio" name="吸烟史" id="smoking_yes" value="有" checked>
                                             <label class="form-check-label" for="smoking_yes">有</label>
                                         </div>
                                     </div>
@@ -207,7 +207,7 @@
                                         <label class="form-check-label" for="friction_none">无</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="摩擦力/剪切力" id="friction_potential" value="潜在">
+                                        <input class="form-check-input" type="radio" name="摩擦力/剪切力" id="friction_potential" value="潜在" checked>
                                         <label class="form-check-label" for="friction_potential">潜在</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -224,7 +224,7 @@
                                         <label class="form-check-label" for="mobility_unlimited">不受限</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="移动能力" id="mobility_limited" value="受限">
+                                        <input class="form-check-input" type="radio" name="移动能力" id="mobility_limited" value="受限" checked>
                                         <label class="form-check-label" for="mobility_limited">受限</label>
                                     </div>
                                 </div>
@@ -233,7 +233,7 @@
                                 <label class="form-label d-block mb-2">水肿</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="水肿" id="edema_no" value="无" required>
+                                        <input class="form-check-input" type="radio" name="水肿" id="edema_no" value="无" required checked>
                                         <label class="form-check-label" for="edema_no">无</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -248,7 +248,7 @@
                                 <label class="form-label d-block mb-2">感知觉</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="感知觉" id="perception_unlimited" value="不受限" required>
+                                        <input class="form-check-input" type="radio" name="感知觉" id="perception_unlimited" value="不受限" required checked>
                                         <label class="form-check-label" for="perception_unlimited">不受限</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -261,7 +261,7 @@
                                 <label class="form-label d-block mb-2">身体活动度</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="身体活动度" id="activity_walking" value="走" required>
+                                        <input class="form-check-input" type="radio" name="身体活动度" id="activity_walking" value="走" required checked>
                                         <label class="form-check-label" for="activity_walking">走</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -278,7 +278,7 @@
                                 <label class="form-label d-block mb-2">日常食物获取</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="日常食物获取" id="food_enough" value="充足" required>
+                                        <input class="form-check-input" type="radio" name="日常食物获取" id="food_enough" value="充足" required checked>
                                         <label class="form-check-label" for="food_enough">充足</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -297,7 +297,7 @@
                                         <label class="form-check-label" for="skin_no">无</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="皮肤潮湿" id="skin_yes" value="有">
+                                        <input class="form-check-input" type="radio" name="皮肤潮湿" id="skin_yes" value="有" checked>
                                         <label class="form-check-label" for="skin_yes">有</label>
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@
                                 <label class="form-label d-block mb-2">意识障碍</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="意识障碍" id="consciousness_no" value="无" required>
+                                        <input class="form-check-input" type="radio" name="意识障碍" id="consciousness_no" value="无" required checked>
                                         <label class="form-check-label" for="consciousness_no">无</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -334,7 +334,7 @@
                                     <select class="form-select" id="hypertension" name="高血压" required>
                                         <option value="" disabled selected>请选择...</option>
                                         <option value="无">无</option>
-                                        <option value="有">有</option>
+                                        <option value="有" selected>有</option>
                                     </select>
                                     <div class="invalid-feedback">请选择是否有高血压。</div>
                                 </div>
@@ -342,7 +342,7 @@
                                     <label for="diabetes" class="form-label">糖尿病</label>
                                     <select class="form-select" id="diabetes" name="糖尿病" required>
                                         <option value="" disabled selected>请选择...</option>
-                                        <option value="无">无</option>
+                                        <option value="无" selected>无</option>
                                         <option value="有">有</option>
                                     </select>
                                      <div class="invalid-feedback">请选择是否有糖尿病。</div>
@@ -354,7 +354,7 @@
                                     <select class="form-select" id="heart_disease" name="冠心病" required>
                                         <option value="" disabled selected>请选择...</option>
                                         <option value="无">无</option>
-                                        <option value="有">有</option>
+                                        <option value="有" selected>有</option>
                                     </select>
                                      <div class="invalid-feedback">请选择是否有冠心病。</div>
                                </div>
@@ -363,7 +363,7 @@
                                     <select class="form-select" id="thrombosis" name="下肢深静脉血栓" required>
                                         <option value="" disabled selected>请选择...</option>
                                         <option value="无">无</option>
-                                        <option value="有">有</option>
+                                        <option value="有" selected>有</option>
                                     </select>
                                      <div class="invalid-feedback">请选择是否有下肢深静脉血栓。</div>
                                </div>

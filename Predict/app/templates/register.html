@@ -63,13 +63,13 @@
             
             <!-- 管理员注册切换按钮 -->
             <div class="admin-toggle" id="adminToggle">
-                <i class="bi bi-shield-lock"></i> 管理员注册
+                <i class="bi bi-shield-lock"></i> 医师注册
             </div>
             
             <!-- 管理员密钥输入区域（默认隐藏） -->
             <div class="admin-key-container" id="adminKeyContainer">
                 <div class="form-group">
-                    <label for="adminKey">管理员密钥</label>
+                    <label for="adminKey">医师密钥</label>
                     <input type="password" id="adminKey" name="adminKey" class="a11y-focus">
                     <div class="input-icon">
                         <i class="bi bi-key"></i>
@@ -100,7 +100,7 @@
                 this.innerHTML = '<i class="bi bi-person"></i> 普通用户注册';
                 roleInput.value = 'admin';
             } else {
-                this.innerHTML = '<i class="bi bi-shield-lock"></i> 管理员注册';
+                this.innerHTML = '<i class="bi bi-shield-lock"></i> 医师注册';
                 roleInput.value = 'user';
             }
         });

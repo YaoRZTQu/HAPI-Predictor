@@ -25,6 +25,7 @@ class FeedbackResponse(FeedbackBase):
     created_at: datetime
     updated_at: datetime
     replied_at: Optional[datetime] = None
+    user_name: Optional[str] = None
     
     class Config:
         orm_mode = True 

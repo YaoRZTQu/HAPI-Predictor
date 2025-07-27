@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>""未卜先治" - 首页</title>
+    <title>首页 - "未卜先治"</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <!-- 加载主题工具脚本 -->
     <script src="/static/js/theme-utils.js"></script>
+    <style>
+  #batchPredictCard,
+  #contactAndReply {
+    display: none !important;
+  }
+</style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -43,10 +49,10 @@
                         <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 我的反馈</a>
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
-                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 管理控制台</a>
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
@@ -78,13 +84,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 animate-fade-in-delay-2" id="batchPredictCard" style="display: none;">
+            <div class="col-md-4 animate-fade-in-delay-2" id="batchPredictCard">
                 <div class="feature-card" onclick="window.location.href='/predictor/batch'">
                     <div class="card-body text-center">
                         <i class="bi bi-people"></i>
                         <h3 class="card-title">多例风险预测</h3>
                         <p class="card-text">上传包含多个患者数据的表格文件进行多例预测</p>
                         <button class="btn btn-success">批量预测</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 animate-fade-in-delay-2" id="contactAndReply">
+                <div class="feature-card" onclick="window.location.href='/my-feedback'">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people"></i>
+                        <h3 class="card-title">咨询专业医师</h3>
+                        <p class="card-text">查看您提交的咨询和专业医师的回复</p>
+                        <button class="btn btn-success">咨询留言</button>
                     </div>
                 </div>
             </div>
@@ -95,30 +111,6 @@
                         <h3 class="card-title">智能医疗问答</h3>
                         <p class="card-text">基于医学知识库的智能问答系统</p>
                         <button class="btn btn-info">开始咨询</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 数据分析功能卡片（仅管理员可见） -->
-        <div class="row mb-4" id="adminFeaturesRow" style="display: none;">
-            <div class="col-md-6 animate-fade-in-delay-4">
-                <div class="feature-card" onclick="window.location.href='/data-dashboard'">
-                    <div class="card-body text-center">
-                        <i class="bi bi-graph-up"></i>
-                        <h3 class="card-title">数据看板</h3>
-                        <p class="card-text">查看系统使用统计和预测数据分析</p>
-                        <button class="btn btn-warning">查看数据</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 animate-fade-in-delay-5">
-                <div class="feature-card" onclick="window.location.href='/admin'">
-                    <div class="card-body text-center">
-                        <i class="bi bi-shield-lock"></i>
-                        <h3 class="card-title">管理控制台</h3>
-                        <p class="card-text">用户管理和系统配置</p>
-                        <button class="btn btn-danger">管理系统</button>
                     </div>
                 </div>
             </div>
@@ -195,51 +187,37 @@
     
     <!-- 权限检查脚本 -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM加载完成，开始权限检查');
-            
-            // 立即执行权限检查
-            const userRole = localStorage.getItem('user_role');
-            console.log('当前用户角色:', userRole);
-            
-            if (userRole === 'admin') {
-                console.log('检测到管理员，立即显示管理员功能');
-                
-                // 立即显示管理员功能
-                const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
-                adminElements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.style.setProperty('display', 'block', 'important');
-                        element.removeAttribute('style');
-                        element.style.display = 'block';
-                        console.log(`强制显示元素: ${id}`);
-                    }
-                });
-            }
-            
-            // 等待authManager初始化
-            setTimeout(function() {
-                if (window.authManager) {
-                    console.log('authManager已初始化，执行权限检查');
-                    window.authManager.updateUIElements();
-                } else {
-                    console.error('authManager未找到');
-                }
-                
-                // 再次强制检查
-                if (userRole === 'admin') {
-                    const adminElements = ['batchPredictLink', 'dataDashboardLink', 'adminLink'];
-                    adminElements.forEach(id => {
-                        const element = document.getElementById(id);
-                        if (element && window.getComputedStyle(element).display === 'none') {
-                            console.log(`元素 ${id} 仍然隐藏，强制显示`);
-                            element.style.setProperty('display', 'block', 'important');
-                        }
-                    });
-                }
-            }, 500);
-        });
-    </script>
+  // 💡 封装为函数，根据用户角色显示正确卡片
+  function showCardByUserRole(role) {
+    const contactCard = document.getElementById('contactAndReply');
+    const batchCard = document.getElementById('batchPredictCard');
+
+    if (!contactCard || !batchCard) return;
+
+    if (role === 'admin') {
+      contactCard.style.setProperty('display', 'none', 'important');
+      batchCard.style.setProperty('display', 'block', 'important');
+    } else {
+      batchCard.style.setProperty('display', 'none', 'important');
+      contactCard.style.setProperty('display', 'block', 'important');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async function () {
+    console.log('DOM 加载完成，准备执行身份识别');
+
+    // 💡 等待 authManager 初始化（如果是异步的）
+    if (window.authManager && typeof authManager.init === 'function') {
+      await authManager.init();
+    }
+
+    // 💡 从 localStorage 获取身份（建议后端写入）
+    const userRole = localStorage.getItem('user_role') || 'user';
+    console.log('当前用户角色是：', userRole);
+
+    // 💡 控制显示卡片
+    showCardByUserRole(userRole);
+  });
+</script>
 </body>
 </html> 

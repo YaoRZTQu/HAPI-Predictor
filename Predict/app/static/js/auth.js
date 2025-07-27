@@ -151,6 +151,7 @@ class AuthManager {
         
         // 获取仪表盘页面的管理员功能卡片
         const batchPredictCard = document.getElementById('batchPredictCard');
+        const contactAndReply = document.getElementById('contactAndReply');
         const adminFeaturesRow = document.getElementById('adminFeaturesRow');
         
         console.log('当前用户角色:', this.getUserRole());
@@ -160,6 +161,7 @@ class AuthManager {
             batchPredictLink: !!batchPredictLink,
             dataDashboardLink: !!dataDashboardLink,
             batchPredictCard: !!batchPredictCard,
+            contactAndReply: !!contactAndReply,
             adminFeaturesRow: !!adminFeaturesRow
         });
         
@@ -188,6 +190,10 @@ class AuthManager {
                 batchPredictCard.style.display = 'block';
                 console.log('显示批量预测卡片');
             }
+            if (contactAndReply) {
+                contactAndReply.style.display = 'none';
+                console.log('隐藏咨询留言卡片');
+            }
             if (adminFeaturesRow) {
                 adminFeaturesRow.style.display = 'flex';
                 console.log('显示管理员功能行');
@@ -212,6 +218,10 @@ class AuthManager {
             if (batchPredictCard) {
                 batchPredictCard.style.display = 'none';
                 console.log('隐藏批量预测卡片');
+            }
+            if (contactAndReply) {
+                contactAndReply.style.display = 'block';
+                console.log('显示咨询留言卡片');
             }
             if (adminFeaturesRow) {
                 adminFeaturesRow.style.display = 'none';

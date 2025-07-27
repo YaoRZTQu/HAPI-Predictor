@@ -57,10 +57,17 @@ async def get_all_feedbacks(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="权限不足，仅管理员可查看所有反馈"
         )
-    
+
     feedbacks = db.query(Feedback).order_by(Feedback.created_at.desc()).offset(skip).limit(limit).all()
     logger.info(f"管理员 {current_user.username} 获取所有反馈，数量: {len(feedbacks)}")
-    return feedbacks
+    result = []
+    for feedback in feedbacks:
+        feedback_dict = feedback.__dict__.copy()
+        user = db.query(User).filter(User.id == feedback.user_id).first()
+        feedback_dict['user_name'] = user.username if user else '未知用户'
+        result.append(FeedbackResponse(**feedback_dict))
+
+    return result
 
 # 获取我的反馈
 @router.get("/my", response_model=List[FeedbackResponse])
@@ -98,7 +105,16 @@ async def get_feedback(
         )
     
     logger.info(f"用户 {current_user.username} 获取反馈详情，ID: {feedback_id}")
-    return feedback
+    return FeedbackResponse(
+        id=feedback.id,
+        title=feedback.title,
+        content=feedback.content,
+        user_id=feedback.user_id,
+        user_name=feedback.user.username,  # 关键点
+        status=feedback.status,
+        created_at=feedback.created_at,
+        updated_at = feedback.updated_at
+    )
 
 # 更新反馈（管理员回复）
 @router.put("/{feedback_id}", response_model=FeedbackResponse)
