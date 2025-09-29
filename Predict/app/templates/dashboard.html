@@ -187,35 +187,44 @@
     
     <!-- 权限检查脚本 -->
     <script>
-  // 💡 封装为函数，根据用户角色显示正确卡片
+  // 💡 封装为函数：根据用户角色显示正确内容
   function showCardByUserRole(role) {
     const contactCard = document.getElementById('contactAndReply');
     const batchCard = document.getElementById('batchPredictCard');
+    const dashboardLink = document.getElementById('dataDashboardLink');
+    const batchLink = document.getElementById('batchPredictLink');
 
-    if (!contactCard || !batchCard) return;
+    // 若有元素不存在，则跳过处理
+    if (!contactCard || !batchCard || !dashboardLink || !batchLink) return;
 
     if (role === 'admin') {
+      // 显示管理员相关内容
       contactCard.style.setProperty('display', 'none', 'important');
       batchCard.style.setProperty('display', 'block', 'important');
+      dashboardLink.style.setProperty('display', 'inline-block', 'important');
+      batchLink.style.setProperty('display', 'inline-block', 'important');
     } else {
+      // 显示普通用户内容
       batchCard.style.setProperty('display', 'none', 'important');
       contactCard.style.setProperty('display', 'block', 'important');
+      dashboardLink.style.setProperty('display', 'none', 'important');
+      batchLink.style.setProperty('display', 'none', 'important');
     }
   }
 
   document.addEventListener('DOMContentLoaded', async function () {
     console.log('DOM 加载完成，准备执行身份识别');
 
-    // 💡 等待 authManager 初始化（如果是异步的）
+    // 💡 等待 authManager 初始化（若是异步身份系统）
     if (window.authManager && typeof authManager.init === 'function') {
       await authManager.init();
     }
 
-    // 💡 从 localStorage 获取身份（建议后端写入）
+    // 💡 从 localStorage 获取身份（建议由后端设置）
     const userRole = localStorage.getItem('user_role') || 'user';
     console.log('当前用户角色是：', userRole);
 
-    // 💡 控制显示卡片
+    // 💡 控制显示元素
     showCardByUserRole(userRole);
   });
 </script>

@@ -63,7 +63,7 @@ class ChatHistoryDetailResponse(BaseModel):
 #MODEL_NAME = "deepseek-r1:7b"
 
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
-DEEPSEEK_API_KEY = "sk-cb1454afb80a410fb54439da44e07786"
+DEEPSEEK_API_KEY = "sk-9f3eadbef37a472a91a4e65045ca69c4"
 DEEPSEEK_MODEL = "deepseek-chat"
 
 @router.post("/ask")

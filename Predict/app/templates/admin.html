@@ -488,7 +488,7 @@
                             <div class="col-md-6">
                                 <div class="btn-group float-md-end" role="group">
                                     <button type="button" class="btn btn-outline-primary active" data-role="all">所有用户</button>
-                                    <button type="button" class="btn btn-outline-success" data-role="user">普通用户</button>
+                                    <button type="button" class="btn btn-outline-success" data-role="user">患者</button>
                                     <button type="button" class="btn btn-outline-danger" data-role="admin">医师</button>
                                 </div>
                             </div>
@@ -1050,7 +1050,7 @@
                     <td>${user.email}</td>
                     <td>
                         <span class="badge ${user.role === 'admin' ? 'bg-danger' : 'bg-success'}">
-                            ${user.role === 'admin' ? '管理员' : '普通用户'}
+                            ${user.role === 'admin' ? '医师' : '患者'}
                         </span>
                     </td>
                     <td>${formattedDate}</td>

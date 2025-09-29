@@ -16,7 +16,7 @@ config_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__fil
 
 # 默认数据库配置
 DB_USER = "dvlp"
-DB_PASSWORD = "passwd"
+DB_PASSWORD = "!!Wy040105"
 DB_HOST = "localhost"
 DB_PORT = "3306"
 DB_NAME = "mission1_db"
