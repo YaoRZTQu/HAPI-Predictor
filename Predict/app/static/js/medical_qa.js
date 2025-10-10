@@ -1163,7 +1163,7 @@ async function checkOllamaService() {
     // 移除检查Ollama服务的代码，改为显示DeepSeek API使用信息
     try {
         // 显示使用DeepSeek API的信息
-        addSystemMessage('系统已连接到专家模型，医疗问答服务正常运行中。');
+        addSystemMessage('The system is connected to the expert model, and the medical Q&A service is running normally.');
     } catch (error) {
         console.error('显示系统信息时出错:', error);
     }

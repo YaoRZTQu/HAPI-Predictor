@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>医师后台 - "未卜先治"</title>
+    <title>Physician Backstage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
@@ -370,7 +370,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard">
-                <i class="bi bi-hospital me-2"></i> "未卜先治"
+                <i class="bi bi-hospital me-2"></i> HAPI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -378,37 +378,37 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> Single prediction</a>
                     </li>
                     <li class="nav-item" id="batchPredictLink" style="display: none;">
-                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> Multiple predictions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> Intelligent consultation</a>
                     </li>
                     <li class="nav-item" id="dataDashboardLink" style="display: none;">
-                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> Data Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> Inquiry Message</a>
                     </li>
                     <li class="nav-item" id="adminLink">
-                        <a class="nav-link active" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
+                        <a class="nav-link active" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> Physician Console</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
-                    <span class="text-light me-3">医师: <span id="currentUsername">用户</span></span>
+                    <span class="text-light me-3">Physician: <span id="currentUsername">User</span></span>
                     <button class="btn btn-outline-light btn-sm" id="logoutBtn">
-                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                        <i class="bi bi-box-arrow-right me-1"></i>Exit
                     </button>
                 </div>
             </div>
@@ -421,13 +421,13 @@
         <div class="row">
             <!-- 侧边栏 -->
             <div class="col-md-3 col-lg-2 admin-sidebar">
-                <h5 class="text-center mb-4">医师后台管理</h5>
+                <h5 class="text-center mb-4">Physician Backend Management</h5>
                 <div class="nav flex-column nav-pills">
                     <a class="nav-link active" data-section="feedback-section">
-                        <i class="bi bi-chat-left-text me-2"></i>用户咨询管理
+                        <i class="bi bi-chat-left-text me-2"></i>User Inquiry Management
                     </a>
                     <a class="nav-link" data-section="user-section">
-                        <i class="bi bi-people me-2"></i>用户管理
+                        <i class="bi bi-people me-2"></i>User Management
                     </a>
                 </div>
             </div>
@@ -436,12 +436,12 @@
             <div class="col-md-9 col-lg-10 admin-content">
                 <!-- 用户反馈管理 -->
                 <div class="feedback-section section active" id="feedback-section">
-                    <h2 class="admin-title"><i class="bi bi-chat-left-text me-2"></i>用户咨询管理</h2>
+                    <h2 class="admin-title"><i class="bi bi-chat-left-text me-2"></i>User Inquiry Management</h2>
                     <div class="mb-4">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="搜索咨询..." id="feedbackSearch">
+                                    <input type="text" class="form-control" placeholder="Search for consultation..." id="feedbackSearch">
                                     <button class="btn btn-outline-secondary" type="button" id="searchButton">
                                         <i class="bi bi-search"></i>
                                     </button>
@@ -449,11 +449,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="btn-group float-md-end" role="group">
-                                    <button type="button" class="btn btn-outline-primary active" data-filter="all">所有</button>
-                                    <button type="button" class="btn btn-outline-warning" data-filter="pending">高风险</button>
-                                    <button type="button" class="btn btn-outline-info" data-filter="processing">中风险</button>
-                                    <button type="button" class="btn btn-outline-success" data-filter="resolved">低风险</button>
-                                    <button type="button" class="btn btn-outline-dark" data-filter="unreaded">待回复</button>
+                                    <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                                    <button type="button" class="btn btn-outline-warning" data-filter="pending">High risk</button>
+                                    <button type="button" class="btn btn-outline-info" data-filter="processing">Medium risk</button>
+                                    <button type="button" class="btn btn-outline-success" data-filter="resolved">Low risk</button>
+                                    <button type="button" class="btn btn-outline-dark" data-filter="unreaded">Pending reply</button>
                                 </div>
                             </div>
                         </div>
@@ -463,9 +463,9 @@
                         <!-- 加载中提示 -->
                         <div class="text-center my-5" id="loadingIndicator">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">加载中...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">正在加载咨询数据...</p>
+                            <p class="mt-2">Loading consultation data...</p>
                         </div>
                         
                         <!-- 反馈列表将通过JS动态添加到这里 -->
@@ -474,12 +474,12 @@
                 
                 <!-- 用户管理 -->
                 <div class="user-section section" id="user-section">
-                    <h2 class="admin-title"><i class="bi bi-people me-2"></i>用户管理</h2>
+                    <h2 class="admin-title"><i class="bi bi-people me-2"></i>User Management</h2>
                     <div class="mb-4">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="搜索用户..." id="userSearch">
+                                    <input type="text" class="form-control" placeholder="Search users..." id="userSearch">
                                     <button class="btn btn-outline-secondary" type="button" id="userSearchButton">
                                         <i class="bi bi-search"></i>
                                     </button>
@@ -487,9 +487,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="btn-group float-md-end" role="group">
-                                    <button type="button" class="btn btn-outline-primary active" data-role="all">所有用户</button>
-                                    <button type="button" class="btn btn-outline-success" data-role="user">患者</button>
-                                    <button type="button" class="btn btn-outline-danger" data-role="admin">医师</button>
+                                    <button type="button" class="btn btn-outline-primary active" data-role="all">All users</button>
+                                    <button type="button" class="btn btn-outline-success" data-role="user">Patient</button>
+                                    <button type="button" class="btn btn-outline-danger" data-role="admin">Physician</button>
                                 </div>
                             </div>
                         </div>
@@ -499,9 +499,9 @@
                         <!-- 加载中提示 -->
                         <div class="text-center my-5" id="userLoadingIndicator">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">加载中...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">正在加载用户数据...</p>
+                            <p class="mt-2">Loading user data...</p>
                         </div>
                         
                         <!-- 用户列表将通过JS动态添加到这里 -->
@@ -519,8 +519,8 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="feedbackDetailModalLabel">咨询详情与回复</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="feedbackDetailModalLabel">Consultation Details and Replies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="feedbackDetailContent">
@@ -528,28 +528,28 @@
                     </div>
                     <hr>
                     <form id="replyForm" class="mt-4">
-                        <h5><i class="bi bi-reply me-2"></i>医师回复</h5>
+                        <h5><i class="bi bi-reply me-2"></i>Doctor's reply</h5>
                         <input type="hidden" id="feedbackId">
                         <div class="mb-3">
-                            <label for="statusSelect" class="form-label">更新状态</label>
+                            <label for="statusSelect" class="form-label">Update Status</label>
                             <select class="form-select" id="statusSelect">
-                                <option value="pending">高风险</option>
-                                <option value="processing">中风险</option>
-                                <option value="resolved">低风险</option>
-                                <option value="unreaded">待回复</option>
+                                <option value="pending">High risk</option>
+                                <option value="processing">Medium Risk</option>
+                                <option value="resolved">Low risk</option>
+                                <option value="unreaded">Pending reply</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="replyContent" class="form-label">回复内容</label>
-                            <textarea class="form-control" id="replyContent" rows="4" placeholder="请输入回复内容..."></textarea>
+                            <label for="replyContent" class="form-label">Reply content</label>
+                            <textarea class="form-control" id="replyContent" rows="4" placeholder="Please enter reply content..."></textarea>
                         </div>
                     </form>
                     <div id="replyMessage" class="alert" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="submitReply">
-                        <span id="replySubmitText">提交回复</span>
+                        <span id="replySubmitText">Submit Reply</span>
                         <span id="replyLoading" class="spinner-border spinner-border-sm ms-1" style="display: none;"></span>
                     </button>
                 </div>
@@ -649,7 +649,7 @@
                 const messageDiv = document.getElementById('replyMessage');
                 
                 submitButton.disabled = true;
-                submitText.textContent = '提交中...';
+                submitText.textContent = 'Submitting...';
                 loadingSpinner.style.display = 'inline-block';
                 messageDiv.style.display = 'none';
                 
@@ -668,7 +668,7 @@
                     
                     if (response.ok) {
                         // 提交成功
-                        messageDiv.textContent = '回复已成功提交！';
+                        messageDiv.textContent = 'Reply has been successfully submitted!';
                         messageDiv.className = 'alert alert-success';
                         
                         // 2秒后关闭Modal并刷新列表
@@ -680,17 +680,17 @@
                     } else {
                         // 提交失败
                         const errorData = await response.json();
-                        messageDiv.textContent = errorData.detail || '提交失败，请稍后再试';
+                        messageDiv.textContent = errorData.detail || 'Submission failed, please try again later.';
                         messageDiv.className = 'alert alert-danger';
                     }
                 } catch (error) {
-                    console.error('提交回复出错:', error);
-                    messageDiv.textContent = '网络错误，请检查您的连接';
+                    console.error('Error submitting reply:', error);
+                    messageDiv.textContent = 'Network error, please check your connection.';
                     messageDiv.className = 'alert alert-danger';
                 } finally {
                     // 恢复按钮状态
                     submitButton.disabled = false;
-                    submitText.textContent = '提交回复';
+                    submitText.textContent = 'Submit Reply';
                     loadingSpinner.style.display = 'none';
                     messageDiv.style.display = 'block';
                 }
@@ -725,7 +725,7 @@
                     
                     // 检查是否有反馈
                     if (feedbacks.length === 0) {
-                        feedbackList.innerHTML = '<div class="alert alert-info">暂无咨询数据</div>';
+                        feedbackList.innerHTML = '<div class="alert alert-info">No consultation data available</div>';
                     } else {
                         // 创建反馈列表
                         renderFeedbacks(feedbacks);
@@ -733,11 +733,11 @@
                 } else {
                     // 处理错误
                     const errorData = await response.json();
-                    feedbackList.innerHTML = `<div class="alert alert-danger">${errorData.detail || '加载咨询失败，请刷新页面重试'}</div>`;
+                    feedbackList.innerHTML = `<div class="alert alert-danger">${errorData.detail || 'Failed to load consultation, please refresh the page and try again.'}</div>`;
                 }
             } catch (error) {
-                console.error('加载咨询出错:', error);
-                feedbackList.innerHTML = '<div class="alert alert-danger">网络错误，请检查您的连接</div>';
+                console.error('Error loading consultation:', error);
+                feedbackList.innerHTML = '<div class="alert alert-danger">Network error, please check your connection.</div>';
             }
         }
         
@@ -754,11 +754,11 @@
             thead.innerHTML = `
                 <tr>
                     <th>ID</th>
-                    <th>标题</th>
-                    <th>用户</th>
-                    <th>状态</th>
-                    <th>提交时间</th>
-                    <th>操作</th>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Submission Time</th>
+                    <th>Operation</th>
                 </tr>
             `;
             table.appendChild(thead);
@@ -774,19 +774,19 @@
                 switch (feedback.status) {
                     case 'pending':
                         statusClass = 'status-pending';
-                        statusText = '高风险';
+                        statusText = 'High risk';
                         break;
                     case 'processing':
                         statusClass = 'status-processing';
-                        statusText = '中风险';
+                        statusText = 'Medium Risk';
                         break;
                     case 'resolved':
                         statusClass = 'status-resolved';
-                        statusText = '低风险';
+                        statusText = 'Low risk';
                         break;
                     case 'unreaded':
                         statusClass = 'status-unreaded';
-                        statusText = '待回复'
+                        statusText = 'Pending reply'
                 }
                 
                 // 创建日期格式化
@@ -803,7 +803,7 @@
                     <td>${formattedDate}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary view-reply" data-id="${feedback.id}">
-                            <i class="bi bi-eye me-1"></i>查看/回复
+                            <i class="bi bi-eye me-1"></i>View/Reply
                         </button>
                     </td>
                 `;
@@ -834,9 +834,9 @@
             detailContent.innerHTML = `
                 <div class="text-center my-3">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">加载中...</span>
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    <p class="mt-2">正在加载咨询详情...</p>
+                    <p class="mt-2">Loading consultation details...</p>
                 </div>
             `;
             
@@ -863,19 +863,19 @@
                     switch (feedback.status) {
                         case 'pending':
                             statusClass = 'status-pending';
-                            statusText = '高风险';
+                            statusText = 'High risk';
                             break;
                         case 'processing':
                             statusClass = 'status-processing';
-                            statusText = '中风险';
+                            statusText = 'Medium risk';
                             break;
                         case 'resolved':
                             statusClass = 'status-resolved';
-                            statusText = '低风险';
+                            statusText = 'Low risk';
                             break;
                         case 'unreaded':
                             statusClass = 'status-unreaded';
-                            statusText = '待回复'
+                            statusText = 'Pending reply'
                             break;
 
                     }
@@ -885,35 +885,35 @@
                     const formattedDate = `${createdDate.getFullYear()}-${(createdDate.getMonth() + 1).toString().padStart(2, '0')}-${createdDate.getDate().toString().padStart(2, '0')} ${createdDate.getHours().toString().padStart(2, '0')}:${createdDate.getMinutes().toString().padStart(2, '0')}`;
                     
                     // 更新modal标题
-                    document.getElementById('feedbackDetailModalLabel').textContent = `咨询详情: ${feedback.title}`;
+                    document.getElementById('feedbackDetailModalLabel').textContent = `Consultation Details:${feedback.title}`;
                     
                     // 填充内容
                     detailContent.innerHTML = `
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <span class="feedback-status ${statusClass}">${statusText}</span>
-                            <small class="text-muted">咨询ID: ${feedback.id}</small>
+                            <small class="text-muted">Consultation ID: ${feedback.id}</small>
                         </div>
                         <div class="mb-3">
-                            <h5>咨询标题</h5>
+                            <h5>Consultation Title</h5>
                             <p>${feedback.title}</p>
                         </div>
                         <div class="mb-3">
-                            <h5>用户姓名</h5>
+                            <h5>User Name</h5>
                             <p>${feedback.user_name}</p>
                         </div>
                         <div class="mb-4">
-                            <h5>咨询内容</h5>
+                            <h5>Consultation content</h5>
                             <p>${feedback.content.replace(/\n/g, '<br>')}</p>
                             <div class="text-muted">
-                                <small>提交时间: ${formattedDate}</small>
+                                <small>Submission Time: ${formattedDate}</small>
                             </div>
                         </div>
                         ${feedback.reply ? `
                             <div class="alert alert-info">
-                                <h5>之前的回复</h5>
+                                <h5>Previous reply</h5>
                                 <p>${feedback.reply}</p>
                                 <div class="text-muted">
-                                    <small>回复时间: ${new Date(feedback.replied_at).toLocaleString()}</small>
+                                    <small>Reply Time: ${new Date(feedback.replied_at).toLocaleString()}</small>
                                 </div>
                             </div>
                         ` : ''}
@@ -927,11 +927,11 @@
                 } else {
                     // 处理错误
                     const errorData = await response.json();
-                    detailContent.innerHTML = `<div class="alert alert-danger">${errorData.detail || '加载咨询详情失败'}</div>`;
+                    detailContent.innerHTML = `<div class="alert alert-danger">${errorData.detail || 'Failed to load consultation details'}</div>`;
                 }
             } catch (error) {
-                console.error('加载咨询详情出错:', error);
-                detailContent.innerHTML = '<div class="alert alert-danger">网络错误，请检查您的连接</div>';
+                console.error('Error loading consultation details:', error);
+                detailContent.innerHTML = '<div class="alert alert-danger">Network error, please check your connection</div>';
             }
         }
         
@@ -996,7 +996,7 @@
                     
                     // 检查是否有用户
                     if (users.length === 0) {
-                        userList.innerHTML = '<div class="alert alert-info">暂无用户数据</div>';
+                        userList.innerHTML = '<div class="alert alert-info">No user data available</div>';
                     } else {
                         // 创建用户列表
                         renderUsers(users);
@@ -1004,11 +1004,11 @@
                 } else {
                     // 处理错误
                     const errorData = await response.json();
-                    userList.innerHTML = `<div class="alert alert-danger">${errorData.detail || '加载用户失败，请刷新页面重试'}</div>`;
+                    userList.innerHTML = `<div class="alert alert-danger">${errorData.detail || 'Failed to load user, please refresh the page and try again.'}</div>`;
                 }
             } catch (error) {
-                console.error('加载用户出错:', error);
-                userList.innerHTML = '<div class="alert alert-danger">用户API未实现，请直接查看咨询数据</div>';
+                console.error('Error loading user:', error);
+                userList.innerHTML = '<div class="alert alert-danger">The user API is not implemented, please directly view the consultation data.</div>';
             }
         }
         
@@ -1025,11 +1025,11 @@
             thead.innerHTML = `
                 <tr>
                     <th>ID</th>
-                    <th>用户名</th>
-                    <th>邮箱</th>
-                    <th>角色</th>
-                    <th>注册时间</th>
-                    <th>操作</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>User</th>
+                    <th>Registration Time</th>
+                    <th>Operation</th>
                 </tr>
             `;
             table.appendChild(thead);
@@ -1050,13 +1050,13 @@
                     <td>${user.email}</td>
                     <td>
                         <span class="badge ${user.role === 'admin' ? 'bg-danger' : 'bg-success'}">
-                            ${user.role === 'admin' ? '医师' : '患者'}
+                            ${user.role === 'admin' ? 'Physician' : 'Patient'}
                         </span>
                     </td>
                     <td>${formattedDate}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-info user-detail" data-id="${user.id}">
-                            <i class="bi bi-eye me-1"></i>详情
+                            <i class="bi bi-eye me-1"></i>Details
                         </button>
                     </td>
                 `;

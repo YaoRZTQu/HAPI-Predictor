@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HAPI风险预测系统{% endblock %} - 未卜先治</title>
+    <title>{% block title %}Hospital-Acquired Pressure Injury Risk Prediction System for Elderly Patients{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -62,7 +62,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/dashboard">
-                <i class="bi bi-hospital me-2"></i> "未卜先治"
+                <i class="bi bi-hospital me-2"></i> HAPI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -70,36 +70,36 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.url.path == '/predictor/single' %}active{% endif %}" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                        <a class="nav-link {% if request.url.path == '/predictor/single' %}active{% endif %}" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> Single prediction</a>
                     </li>
                     <li class="nav-item" id="batchPredictLink" style="display: none;">
-                        <a class="nav-link {% if request.url.path == '/predictor/batch' %}active{% endif %}" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                        <a class="nav-link {% if request.url.path == '/predictor/batch' %}active{% endif %}" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> Multiple predictions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> Intelligent consultation</a>
                     </li>
                     <li class="nav-item" id="dataDashboardLink" style="display: none;">
-                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> Data Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> Inquiry Message</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
-                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> Physician Console</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-outline-light btn-sm" id="logoutBtn">
-                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                        <i class="bi bi-box-arrow-right me-1"></i>Exit
                     </button>
                 </div>
             </div>
@@ -115,7 +115,7 @@
     <!-- 页脚 -->
     <footer class="py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">© {{ now.year }} "未卜先治"系统. 保留所有权利.</p>
+            <p class="mb-0">© {{ now.year }} HAPI System. All rights reserved.</p>
         </div>
     </footer>
 

@@ -42,26 +42,26 @@ os.makedirs(REPORTS_DIR, exist_ok=True)
 
 # 定义输入字段及其类型 (从 HAPI-Predictor/app.py 迁移)
 NUMERIC_FIELDS = [
-    '住院第几天',
-    '白细胞计数',
-    '血钾浓度',
-    '白蛋白计数'
+    'Length of hospitalization',
+    'White blood cells',
+    'Serum potassium',
+    'Albumin'
 ]
 
 CATEGORICAL_FIELDS = [
-    '吸烟史',
-    '摩擦力/剪切力',
-    '移动能力',
-    '感知觉',
-    '身体活动度',
-    '日常食物获取',
-    '水肿',
-    '皮肤潮湿',
-    '意识障碍',
-    '高血压',
-    '糖尿病',
-    '冠心病',
-    '下肢深静脉血栓'
+    'Smoking history',
+    'Friction or shear',
+    'Mobility',
+    'Sensation',
+    'Physical activity',
+    'Daily food intake',
+    'Edema',
+    'Moist skin',
+    'Consciousness',
+    'Hypertension',
+    'Diabetes mellitus',
+    'Coronary heart disease',
+    'Deep vein thrombosis'
 ]
 
 # 模型名称映射 (从 HAPI-Predictor/app.py 迁移)
@@ -270,27 +270,57 @@ def get_available_models():
     return available_models
 
 # --- HAPI Specific Mappings and Constants ---
+# {{ AURA-X: Modify - 添加英文字段名到中文模型特征名的映射，支持英文前端输入 }}
 FIELD_MAPPING = {
-    '住院第几天': '住院时长',
-    '白细胞计数': '白细胞',
-    '血钾浓度': '血钾',
-    '白蛋白计数': '白蛋白',
-    '日常食物获取': '日常食物获取量',
+    'Length of hospitalization': '住院时长',
+    'White blood cells': '白细胞',
+    'Serum potassium': '血钾',
+    'Albumin': '白蛋白',
+    'Daily food intake': '日常食物获取量',
+    'Smoking history': '吸烟史',
+    'Friction or shear': '摩擦力/剪切力',
+    'Mobility': '移动能力',
+    'Sensation': '感知觉',
+    'Physical activity': '身体活动度',
+    'Edema': '水肿',
+    'Moist skin': '皮肤潮湿',
+    'Consciousness': '意识障碍',
+    'Hypertension': '高血压',
+    'Diabetes mellitus': '糖尿病',
+    'Coronary heart disease': '冠心病',
+    'Deep vein thrombosis': '下肢深静脉血栓'
 }
+
+# {{ AURA-X: Modify - 扩展分类映射，同时支持英文字段名和中文字段名作为键 }}
 CATEGORY_MAPPING = {
-    '吸烟史': {'无': 0, '有': 1},
-    '摩擦力/剪切力': {'无': 0, '潜在': 1, '有': 2},
-    '移动能力': {'不受限': 0, '受限': 1},
-    '感知觉': {'不受限': 0, '受限': 1},
-    '身体活动度': {'走': 0, '坐': 1, '卧': 2},
-    '日常食物获取量': {'充足': 0, '缺乏': 1}, # Note: key uses mapped name
-    '水肿': {'无': 0, '有': 1},
-    '皮肤潮湿': {'无': 0, '有': 1},
-    '意识障碍': {'无': 0, '有': 1},
-    '高血压': {'无': 0, '有': 1},
-    '糖尿病': {'无': 0, '有': 1},
-    '冠心病': {'无': 0, '有': 1},
-    '下肢深静脉血栓': {'无': 0, '有': 1}
+    # 英文字段名作为键（用于接收前端英文输入）
+    'Smoking history': {'No': 0, 'Yes': 1},
+    'Friction or shear': {'No': 0, 'Potential': 1, 'Yes': 2},
+    'Mobility': {'Unrestricted': 0, 'Restricted': 1},
+    'Sensation': {'Unrestricted': 0, 'Restricted': 1},
+    'Physical activity': {'Walking': 0, 'Sitting': 1, 'Lying down': 2},
+    'Daily food intake': {'Sufficient': 0, 'Insufficient': 1},
+    'Edema': {'No': 0, 'Yes': 1},
+    'Moist skin': {'No': 0, 'Yes': 1},
+    'Consciousness': {'No': 0, 'Yes': 1},
+    'Hypertension': {'No': 0, 'Yes': 1},
+    'Diabetes mellitus': {'No': 0, 'Yes': 1},
+    'Coronary heart disease': {'No': 0, 'Yes': 1},
+    'Deep vein thrombosis': {'No': 0, 'Yes': 1},
+    # 中文字段名作为键（用于向后兼容和模型输入）
+    '吸烟史': {'No': 0, 'Yes': 1},
+    '摩擦力/剪切力': {'No': 0, 'Potential': 1, 'Yes': 2},
+    '移动能力': {'Unrestricted': 0, 'Restricted': 1},
+    '感知觉': {'Unrestricted': 0, 'Restricted': 1},
+    '身体活动度': {'Walking': 0, 'Sitting': 1, 'Lying down': 2},
+    '日常食物获取量': {'Sufficient': 0, 'Insufficient': 1},
+    '水肿': {'No': 0, 'Yes': 1},
+    '皮肤潮湿': {'No': 0, 'Yes': 1},
+    '意识障碍': {'No': 0, 'Yes': 1},
+    '高血压': {'No': 0, 'Yes': 1},
+    '糖尿病': {'No': 0, 'Yes': 1},
+    '冠心病': {'No': 0, 'Yes': 1},
+    '下肢深静脉血栓': {'No': 0, 'Yes': 1}
 }
 EXPECTED_FEATURES = [
     '住院时长', '吸烟史', '日常食物获取量', '水肿', '皮肤潮湿',
@@ -328,16 +358,25 @@ except Exception as e:
         logger.error("所有中文字体注册失败，回退到 Helvetica。PDF 报告可能无法正确显示中文。")
 
 def prepare_single_input(data: dict) -> pd.DataFrame:
-    """准备单例预测的输入数据，应用 HAPI 的映射、编码和排序。"""
+    """准备单例预测的输入数据，应用 HAPI 的映射、编码和排序。
+    
+    {{ AURA-X: Modify - 重构以支持英文字段名输入，自动映射到中文模型特征名 }}
+    """
     input_dict_mapped = {}
+    
+    # {{ AURA-X: Add - 记录接收到的字段，用于调试 }}
+    logger.info(f"接收到的输入字段: {list(data.keys())}")
+    
     # 处理数值字段
     for field in NUMERIC_FIELDS:
         original_value = data.get(field)
         if original_value is None:
             raise ValueError(f"缺少数值字段: {field}")
         try:
+            # 将英文字段名映射为中文模型特征名
             mapped_field = FIELD_MAPPING.get(field, field)
             input_dict_mapped[mapped_field] = [float(original_value)]
+            logger.debug(f"数值字段映射: {field} -> {mapped_field} = {original_value}")
         except (ValueError, TypeError):
             raise ValueError(f"字段 '{field}' 的值 '{original_value}' 必须是数值")
     
@@ -347,23 +386,31 @@ def prepare_single_input(data: dict) -> pd.DataFrame:
         if original_value is None:
             raise ValueError(f"缺少分类字段: {field}")
         
-        mapped_field = FIELD_MAPPING.get(field, field) # 获取映射后的字段名
-        mapping_dict = CATEGORY_MAPPING.get(mapped_field) # 使用映射后的字段名查找编码
+        # 将英文字段名映射为中文模型特征名
+        mapped_field = FIELD_MAPPING.get(field, field)
+        
+        # {{ AURA-X: Modify - 优先使用英文字段名查找编码映射，然后尝试中文字段名 }}
+        # 首先尝试使用原始英文字段名查找编码映射
+        mapping_dict = CATEGORY_MAPPING.get(field)
+        
+        # 如果找不到，尝试使用映射后的中文字段名
+        if not mapping_dict:
+            mapping_dict = CATEGORY_MAPPING.get(mapped_field)
         
         if not mapping_dict:
-             # 如果用映射后的名字找不到，尝试用原始名字 (以防万一)
-             mapping_dict = CATEGORY_MAPPING.get(field)
-             if not mapping_dict:
-                  raise ValueError(f"未找到字段 '{mapped_field}' (来自 '{field}') 的分类编码映射")
+            raise ValueError(f"未找到字段 '{field}' 或 '{mapped_field}' 的分类编码映射")
         
         if original_value not in mapping_dict:
             raise ValueError(f"字段 '{field}' 的值 '{original_value}' 无效 (允许值: {list(mapping_dict.keys())})")
-            
+        
+        # 将编码后的值存储到中文字段名下
         input_dict_mapped[mapped_field] = [mapping_dict[original_value]]
+        logger.debug(f"分类字段映射: {field} -> {mapped_field} = {original_value} -> {mapping_dict[original_value]}")
 
     # 转换为 DataFrame
     try:
         input_df = pd.DataFrame(input_dict_mapped)
+        logger.info(f"创建的DataFrame列: {list(input_df.columns)}")
     except Exception as e:
         logger.error(f"从处理后的字典创建 DataFrame 失败: {input_dict_mapped}, Error: {e}")
         raise ValueError("无法根据输入数据创建有效的 DataFrame")
@@ -371,6 +418,8 @@ def prepare_single_input(data: dict) -> pd.DataFrame:
     # 检查并强制列顺序
     missing_features = [f for f in EXPECTED_FEATURES if f not in input_df.columns]
     if missing_features:
+        logger.error(f"处理后缺少模型所需的特征: {missing_features}")
+        logger.error(f"当前DataFrame列: {list(input_df.columns)}")
         raise ValueError(f"处理后缺少模型所需的特征: {missing_features}")
         
     input_df = input_df[EXPECTED_FEATURES]
@@ -379,6 +428,7 @@ def prepare_single_input(data: dict) -> pd.DataFrame:
     if input_df.isnull().any().any():
         raise ValueError("数据处理后仍存在无效值 (NaN)")
 
+    logger.info("单例输入数据准备完成")
     return input_df
 
 def predict_single(input_df: pd.DataFrame) -> dict:
@@ -461,16 +511,19 @@ def predict_batch(model_key: str, df: pd.DataFrame) -> tuple[list[float], list[i
         raise RuntimeError(f"使用模型 '{MODEL_NAMES.get(model_key, model_key)}' 执行批量预测失败: {str(e)}")
 
 def get_risk_level(probabilities: list[float]) -> str:
-    """根据预测概率列表的平均值确定风险等级 (更新逻辑)。"""
+    """根据预测概率列表的平均值确定风险等级 (更新逻辑)。
+    
+    {{ AURA-X: Modify - 返回英文风险等级，匹配英文界面 }}
+    """
     if not probabilities: # 处理空列表或所有模型预测失败的情况
-        return "未知"
+        return "Unknown"
     avg_prob = np.mean(probabilities)
     if avg_prob >= 0.7:
-        return '高风险'
+        return 'High Risk'
     elif avg_prob >= 0.3:
-        return '中风险'
+        return 'Medium Risk'
     else:
-        return '低风险'
+        return 'Low Risk'
 
 def prepare_batch_input(df: pd.DataFrame) -> pd.DataFrame:
     """准备批量预测的输入数据。"""
@@ -668,43 +721,213 @@ def generate_template_file() -> BytesIO:
         logger.error(f"生成模板文件时出错: {e}", exc_info=True)
         raise RuntimeError(f"无法生成模板文件: {str(e)}")
 
+# --- Helper function for PDF nursing interventions ---
+def _get_nursing_interventions_for_pdf(risk_level: str) -> list:
+    """Get nursing intervention measures for PDF report based on risk level."""
+    interventions = {
+        'Low Risk': [
+            {
+                'title': 'Assessment Frequency',
+                'content': [
+                    'Assess pressure injury risk weekly',
+                    'Check skin condition every shift'
+                ]
+            },
+            {
+                'title': 'Nutrition',
+                'content': [
+                    'Conduct nutritional assessment',
+                    'Develop personalized nutrition care plan',
+                    'Ensure adequate hydration and balanced diet'
+                ]
+            },
+            {
+                'title': 'Skin Care',
+                'content': [
+                    'Perform comprehensive skin inspection on admission, especially at bony prominences, medical device and catheter contact sites',
+                    'Keep skin clean and dry',
+                    'Avoid damp and wrinkled bed linens'
+                ]
+            },
+            {
+                'title': 'Position Changes',
+                'content': [
+                    'Remind or assist patients to change positions',
+                    'Redistribute pressure regularly'
+                ]
+            },
+            {
+                'title': 'Appropriate Support Surface',
+                'content': [
+                    'Expand body support surface',
+                    'Avoid overly firm mattress'
+                ]
+            },
+            {
+                'title': 'Health Education',
+                'content': [
+                    'Provide pressure injury prevention education to patients, families, or caregivers',
+                    'Encourage patient mobility',
+                    'Teach recognition of early signs: skin redness (non-blanching), warmth, swelling, induration, pain or numbness'
+                ]
+            }
+        ],
+        'Medium Risk': [
+            {
+                'title': 'Assessment Frequency',
+                'content': [
+                    'Assess every three days',
+                    'Check skin condition every shift'
+                ]
+            },
+            {
+                'title': 'Nutrition',
+                'content': [
+                    'Conduct nutritional assessment',
+                    'Develop personalized nutrition care plan',
+                    'Ensure adequate protein and calorie intake'
+                ]
+            },
+            {
+                'title': 'Skin Care',
+                'content': [
+                    'Comprehensive skin inspection on admission at bony prominences and device contact sites',
+                    'Keep skin clean and dry, avoid damp and wrinkled bed linens',
+                    'Apply preventive dressings (silicone foam, polyurethane foam) to high-pressure areas (heels, ankles, sacrum, greater trochanter)'
+                ]
+            },
+            {
+                'title': 'Position Changes',
+                'content': [
+                    'Reposition every 2 hours',
+                    'Recommend 30° lateral tilt position (soft pillow behind back, legs bent with pillow between knees)',
+                    'Avoid pressure on hips and shoulders',
+                    'For higher BMI patients, use 40° lateral tilt',
+                    'Prevent dragging, pulling, or tugging when repositioning to avoid friction and shear forces'
+                ]
+            },
+            {
+                'title': 'Appropriate Support Surface',
+                'content': [
+                    'Avoid overly firm mattress',
+                    'Use air mattress if needed',
+                    'Place triangular support wedge behind back when side-lying'
+                ]
+            },
+            {
+                'title': 'Health Education',
+                'content': [
+                    'Train caregivers on proper repositioning techniques and support tool usage',
+                    'Maintain skin cleanliness and report skin abnormalities',
+                    'Encourage increased nutritional intake and active movement',
+                    'Teach early signs recognition: skin redness, warmth, swelling, induration, pain or numbness'
+                ]
+            }
+        ],
+        'High Risk': [
+            {
+                'title': 'Assessment Frequency',
+                'content': [
+                    'Assess pressure injury risk daily',
+                    'Check skin condition every shift'
+                ]
+            },
+            {
+                'title': 'Nutrition',
+                'content': [
+                    'Conduct nutritional assessment, develop personalized plan',
+                    'Adults need 1.2-1.5g/kg protein daily, 30-35kcal/kg energy',
+                    'Consult nutrition team if needed',
+                    'Consider enteral or parenteral nutrition support',
+                    'Assess daily nutritional intake for severely malnourished patients'
+                ]
+            },
+            {
+                'title': 'Skin Care',
+                'content': [
+                    'Comprehensive skin assessment on admission for any signs of injury',
+                    'Keep skin clean and dry, avoid damp clothing and bed linens',
+                    'For incontinent patients: cleanse skin promptly, avoid frequent vigorous wiping with dry tissue, use barrier products or liquid dressings',
+                    'Apply preventive dressings (silicone foam, polyurethane foam) to high-pressure areas (heels, ankles, sacrum, greater trochanter)'
+                ]
+            },
+            {
+                'title': 'Position Changes',
+                'content': [
+                    'Reposition every 1-2 hours',
+                    'Avoid dragging, pulling, or tugging to minimize friction and shear',
+                    'Recommend 30° lateral tilt position; for higher BMI, use 40° lateral tilt',
+                    'Critically ill, poorly perfused, or malnourished patients need smaller, gradual, more frequent position changes',
+                    'Elevate head of bed no more than 30° unless medically necessary'
+                ]
+            },
+            {
+                'title': 'Appropriate Support Surface',
+                'content': [
+                    'Use air mattress',
+                    'Place triangular support wedge behind back when side-lying',
+                    'Use elevation rings and soft pads around wrists and ankles to avoid joint contact with support surface',
+                    'Place soft pillow between legs'
+                ]
+            },
+            {
+                'title': 'Health Education',
+                'content': [
+                    'Train caregivers on repositioning techniques and proper use of support tools',
+                    'Maintain skin cleanliness and recognize/report skin abnormalities',
+                    'Encourage increased nutritional intake and movement within capabilities',
+                    'Teach early signs recognition: skin redness, warmth, swelling, induration, pain or numbness'
+                ]
+            }
+        ]
+    }
+    
+    return interventions.get(risk_level, [])
+
 # --- PDF Report Generation (Migrated from HAPI) ---
 def generate_single_report(input_data: dict, prediction_result: dict, report_id: str) -> Path:
-    """根据输入和预测结果生成 PDF 报告，并保存到文件。"""
+    """Generate PDF report based on input and prediction results - English version with nursing interventions.
+    
+    Updated to include:
+    - English content throughout
+    - Nursing intervention recommendations based on risk level
+    """
     report_filename = f"report_{report_id}.pdf"
     report_filepath = REPORTS_DIR / report_filename
-    doc = SimpleDocTemplate(str(report_filepath), pagesize=A4, topMargin=50, bottomMargin=50)
+    doc = SimpleDocTemplate(str(report_filepath), pagesize=A4, topMargin=40, bottomMargin=40, leftMargin=50, rightMargin=50)
     styles = getSampleStyleSheet()
     
-    # 自定义样式
-    styles.add(ParagraphStyle(name='TitleStyle', fontName=DEFAULT_FONT, fontSize=22, alignment=1, spaceAfter=20, textColor=colors.Color(0, 0.38, 0.48)))
-    styles.add(ParagraphStyle(name='SubtitleStyle', fontName=DEFAULT_FONT, fontSize=12, alignment=1, textColor=colors.Color(0.3, 0.3, 0.3), spaceAfter=25))
-    styles.add(ParagraphStyle(name='Heading1Style', fontName=DEFAULT_FONT, fontSize=16, spaceAfter=12, spaceBefore=12, textColor=colors.Color(0, 0.38, 0.48)))
-    styles.add(ParagraphStyle(name='BodyStyle', fontName=DEFAULT_FONT, fontSize=10, leading=14))
-    styles.add(ParagraphStyle(name='TableKeyStyle', fontName=DEFAULT_FONT, fontSize=9, alignment=1))
-    styles.add(ParagraphStyle(name='TableValueStyle', fontName=DEFAULT_FONT, fontSize=9, alignment=1))
-    styles.add(ParagraphStyle(name='TableHeaderStyle', fontName=DEFAULT_FONT, fontSize=9, alignment=1, textColor=colors.white))
-    styles.add(ParagraphStyle(name='DisclaimerStyle', fontName=DEFAULT_FONT, fontSize=9, textColor=colors.Color(0.5, 0.5, 0.5), alignment=1, spaceBefore=10))
+    # Custom styles - using Helvetica for English content
+    styles.add(ParagraphStyle(name='TitleStyle', fontName='Helvetica-Bold', fontSize=20, alignment=1, spaceAfter=15, textColor=colors.Color(0, 0.38, 0.48)))
+    styles.add(ParagraphStyle(name='SubtitleStyle', fontName='Helvetica', fontSize=11, alignment=1, textColor=colors.Color(0.3, 0.3, 0.3), spaceAfter=20))
+    styles.add(ParagraphStyle(name='Heading1Style', fontName='Helvetica-Bold', fontSize=14, spaceAfter=10, spaceBefore=15, textColor=colors.Color(0, 0.38, 0.48)))
+    styles.add(ParagraphStyle(name='Heading2Style', fontName='Helvetica-Bold', fontSize=11, spaceAfter=8, spaceBefore=10, textColor=colors.Color(0.2, 0.2, 0.2)))
+    styles.add(ParagraphStyle(name='BodyStyle', fontName='Helvetica', fontSize=9, leading=13, leftIndent=15))
+    styles.add(ParagraphStyle(name='BulletStyle', fontName='Helvetica', fontSize=8, leading=11, leftIndent=25, bulletIndent=15))
+    styles.add(ParagraphStyle(name='TableKeyStyle', fontName='Helvetica', fontSize=8, alignment=1))
+    styles.add(ParagraphStyle(name='TableValueStyle', fontName='Helvetica', fontSize=8, alignment=1))
+    styles.add(ParagraphStyle(name='TableHeaderStyle', fontName='Helvetica-Bold', fontSize=9, alignment=1, textColor=colors.white))
+    styles.add(ParagraphStyle(name='DisclaimerStyle', fontName='Helvetica', fontSize=8, textColor=colors.Color(0.5, 0.5, 0.5), alignment=1, spaceBefore=10))
 
     story = []
 
-    # 1. 标题
-    story.append(Paragraph("HAPI风险预测报告", styles['TitleStyle']))
-    story.append(Paragraph(f"报告生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['SubtitleStyle']))
-    story.append(Spacer(1, 20))
+    # 1. Title
+    story.append(Paragraph("HAPI Risk Prediction Report", styles['TitleStyle']))
+    story.append(Paragraph(f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['SubtitleStyle']))
+    story.append(Spacer(1, 15))
 
-    # 2. 输入信息
-    story.append(Paragraph("一、患者输入信息", styles['Heading1Style']))
+    # 2. Patient Input Information
+    story.append(Paragraph("I. Patient Input Information", styles['Heading1Style']))
     input_table_data = [[
-        Paragraph("项目", styles['TableHeaderStyle']), 
-        Paragraph("数值", styles['TableHeaderStyle'])
+        Paragraph("Parameter", styles['TableHeaderStyle']), 
+        Paragraph("Value", styles['TableHeaderStyle'])
     ]]
     for key, value in input_data.items():
         input_table_data.append([
             Paragraph(str(key), styles['TableKeyStyle']),
             Paragraph(str(value), styles['TableValueStyle'])
         ])
-    input_table = Table(input_table_data, colWidths=[200, 200])
+    input_table = Table(input_table_data, colWidths=[250, 200])
     input_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.Color(0, 0.38, 0.48)),  # 深海蓝
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),  # 修改为白色
@@ -722,21 +945,30 @@ def generate_single_report(input_data: dict, prediction_result: dict, report_id:
     story.append(input_table)
     story.append(Spacer(1, 20))
 
-    # 3. 预测结果
-    story.append(Paragraph("二、预测结果", styles['Heading1Style']))
+    # 3. Prediction Results
+    story.append(Paragraph("II. Prediction Results", styles['Heading1Style']))
+    
+    # English model names mapping
+    model_names_en = {
+        'xgboost': 'XGBoost Model',
+        'random_forest': 'Random Forest Model',
+        'logistic_regression': 'Logistic Regression Model',
+        'naive_bayes': 'Naive Bayes Model'
+    }
+    
     pred_table_data = [[
-        Paragraph("评估模型", styles['TableHeaderStyle']), 
-        Paragraph("预测概率 (发生风险)", styles['TableHeaderStyle']),
-        Paragraph("预测结果", styles['TableHeaderStyle'])
+        Paragraph("Model", styles['TableHeaderStyle']), 
+        Paragraph("Risk Probability", styles['TableHeaderStyle']),
+        Paragraph("Prediction Result", styles['TableHeaderStyle'])
     ]]
     probabilities = prediction_result.get('probabilities', {})
     predictions = prediction_result.get('predictions', {})
     for model_key, prob in probabilities.items():
         if prob is not None:
              pred_table_data.append([
-                 Paragraph(MODEL_NAMES.get(model_key, model_key), styles['TableKeyStyle']),
+                 Paragraph(model_names_en.get(model_key, model_key), styles['TableKeyStyle']),
                  Paragraph(f"{prob:.4f} ({prob*100:.1f}%)", styles['TableValueStyle']),
-                 Paragraph("有风险" if predictions.get(model_key, 0) == 1 else "无风险", styles['TableValueStyle'])
+                 Paragraph("At Risk" if predictions.get(model_key, 0) == 1 else "No Risk", styles['TableValueStyle'])
              ])
     pred_table = Table(pred_table_data, colWidths=[150, 150, 100])
     pred_table.setStyle(TableStyle([
@@ -756,15 +988,16 @@ def generate_single_report(input_data: dict, prediction_result: dict, report_id:
     story.append(pred_table)
     story.append(Spacer(1, 20))
     
+    # {{ AURA-X: Modify - 更新风险等级判断以匹配英文标签 }}
     # 风险等级显示 - 创建一个更加突出的风险等级显示
-    risk_level = prediction_result.get('risk_level', '未知')
+    risk_level = prediction_result.get('risk_level', 'Unknown')
     risk_color = colors.Color(0.2, 0.7, 0.2)  # 默认绿色
-    if risk_level == '高风险':
+    if risk_level == 'High Risk':
         risk_color = colors.Color(0.8, 0.2, 0.2)  # 红色
-    elif risk_level == '中风险':
+    elif risk_level == 'Medium Risk':
         risk_color = colors.Color(0.95, 0.6, 0.1)  # 橙色
     
-    risk_table_data = [[Paragraph("综合风险等级", styles['TableHeaderStyle']), Paragraph(risk_level, styles['TableHeaderStyle'])]]
+    risk_table_data = [[Paragraph("Overall Risk Level", styles['TableHeaderStyle']), Paragraph(risk_level, styles['TableHeaderStyle'])]]
     risk_table = Table(risk_table_data, colWidths=[200, 200])
     risk_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (0, 0), colors.Color(0, 0.38, 0.48)),  # 深海蓝
@@ -782,19 +1015,19 @@ def generate_single_report(input_data: dict, prediction_result: dict, report_id:
     story.append(risk_table)
     story.append(Spacer(1, 20))
     
-    # 4. 特征贡献度 (如果可用)
+    # 4. Feature Contributions (if available)
     feature_contributions = prediction_result.get('feature_contributions', {})
     if feature_contributions:
-        story.append(Paragraph("三、主要影响因素", styles['Heading1Style']))
+        story.append(Paragraph("III. Key Influencing Factors", styles['Heading1Style']))
         contrib_table_data = [[
-            Paragraph("影响因素", styles['TableHeaderStyle']),
-            Paragraph("重要性得分", styles['TableHeaderStyle'])
+            Paragraph("Feature", styles['TableHeaderStyle']),
+            Paragraph("Importance Score", styles['TableHeaderStyle'])
         ]]
-        # 只显示前 N 个最重要的特征
+        # Only show top N most important features
         top_n = 10 
         sorted_features = sorted(feature_contributions.items(), key=lambda x: abs(x[1]), reverse=True)[:top_n]
         for feature, score in sorted_features:
-             # 尝试将模型内部特征名映射回用户可读的名称
+             # Try to map model internal feature names back to user-readable names
              readable_feature = feature
              for user_name, model_name in FIELD_MAPPING.items():
                  if model_name == feature:
@@ -804,7 +1037,7 @@ def generate_single_report(input_data: dict, prediction_result: dict, report_id:
                  Paragraph(readable_feature, styles['TableKeyStyle']),
                  Paragraph(f"{score:.4f}", styles['TableValueStyle'])
              ])
-        contrib_table = Table(contrib_table_data, colWidths=[200, 200])
+        contrib_table = Table(contrib_table_data, colWidths=[250, 150])
         contrib_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.Color(0, 0.38, 0.48)),  # 深海蓝
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),  # 修改为白色
@@ -820,18 +1053,41 @@ def generate_single_report(input_data: dict, prediction_result: dict, report_id:
             ('TOPPADDING', (0, 0), (-1, -1), 8),
         ]))
         story.append(contrib_table)
-        story.append(Spacer(1, 30))
+        story.append(Spacer(1, 20))
+    
+    # 5. Nursing Interventions - NEW SECTION
+    story.append(Paragraph("IV. Recommended Nursing Interventions", styles['Heading1Style']))
+    story.append(Spacer(1, 10))
+    
+    # Get nursing interventions based on risk level
+    nursing_interventions = _get_nursing_interventions_for_pdf(risk_level)
+    
+    if nursing_interventions:
+        # Add risk level specific title
+        story.append(Paragraph(f"<b>{risk_level} - Nursing Care Protocol</b>", styles['Heading2Style']))
+        story.append(Spacer(1, 8))
+        
+        # Add each intervention measure
+        for idx, measure in enumerate(nursing_interventions, 1):
+            # Measure title
+            story.append(Paragraph(f"<b>{idx}. {measure['title']}</b>", styles['Heading2Style']))
+            # Measure content
+            for line in measure['content']:
+                story.append(Paragraph(f"• {line}", styles['BulletStyle']))
+            story.append(Spacer(1, 8))
+    
+    story.append(Spacer(1, 15))
 
-    # 页脚和免责声明
+    # Footer and Disclaimer
     story.append(Paragraph(
-        "免责声明: 本预测结果仅供临床参考，不能替代专业医师的诊断和评估。请结合患者具体情况和临床经验进行决策。",
+        "<b>Disclaimer:</b> This prediction result is for clinical reference only and cannot replace professional physician diagnosis and assessment. Please make decisions based on the patient's specific situation and clinical experience.",
         styles['DisclaimerStyle']
     ))
     
-    # 添加页脚
-    story.append(Spacer(1, 20))
+    # Add footer
+    story.append(Spacer(1, 15))
     story.append(Paragraph(
-        f'"未卜先治" HAPI风险预测系统生成 · www.hapi-predictor.com · 报告ID: {report_id[:8]}',
+        f'HAPI Risk Prediction System · Report ID: {report_id[:8]}',
         styles['DisclaimerStyle']
     ))
 

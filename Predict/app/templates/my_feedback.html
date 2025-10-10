@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>咨询留言 - "未卜先治"</title>
+    <title>Inquiry Message</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
@@ -290,7 +290,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/dashboard">
-                <i class="bi bi-hospital me-2"></i> "未卜先治"
+                <i class="bi bi-hospital me-2"></i> HAPI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -298,36 +298,36 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> Single prediction</a>
                     </li>
                     <li class="nav-item" id="batchPredictLink" style="display: none;">
-                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> Multiple predictions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> Intelligent consultation</a>
                     </li>
                     <li class="nav-item" id="dataDashboardLink" style="display: none;">
-                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                        <a class="nav-link" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> Data Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
+                        <a class="nav-link active" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> Inquiry Message</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
-                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> Physician Console</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-outline-light btn-sm" id="logoutBtn">
-                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                        <i class="bi bi-box-arrow-right me-1"></i>Exit
                     </button>
                 </div>
             </div>
@@ -339,11 +339,11 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1><i class="bi bi-chat-left-text me-2"></i>咨询留言</h1>
-                    <p class="text-muted mb-0">查看您提交的咨询和专业医师的回复</p>
+                    <h1><i class="bi bi-chat-left-text me-2"></i>Inquiry Message</h1>
+                    <p class="text-muted mb-0">View the inquiries you submitted and the responses from professional doctors</p>
                 </div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newFeedbackModal">
-                    <i class="bi bi-plus-circle me-2"></i>新建咨询
+                    <i class="bi bi-plus-circle me-2"></i>New Consultation
                 </button>
             </div>
         </div>
@@ -355,17 +355,17 @@
             <!-- 加载中提示 -->
             <div class="col-12 text-center my-5" id="loadingIndicator">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">加载中...</span>
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-                <p class="mt-2">正在加载您的咨询...</p>
+                <p class="mt-2">Loading your consultation...</p>
             </div>
             
             <!-- 空状态 -->
             <div class="col-12" id="emptyState" style="display: none;">
                 <div class="empty-state">
                     <i class="bi bi-chat-square-text"></i>
-                    <h3>您还没有提交任何咨询</h3>
-                    <p class="text-muted">暂无咨询记录</p>
+                    <h3>You have not submitted any inquiries yet.</h3>
+                    <p class="text-muted">No consultation records available</p>
                 </div>
             </div>
         </div>
@@ -376,26 +376,26 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newFeedbackModalLabel">新建咨询</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="newFeedbackModalLabel">New Consultation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="newFeedbackForm">
                         <div class="mb-3">
-                            <label for="newFeedbackTitle" class="form-label">标题</label>
-                            <input type="text" class="form-control" id="newFeedbackTitle" placeholder="请输入咨询标题" required>
+                            <label for="newFeedbackTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="newFeedbackTitle" placeholder="Please enter the consultation title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="newFeedbackContent" class="form-label">内容</label>
-                            <textarea class="form-control" id="newFeedbackContent" rows="5" placeholder="请详细描述您的问题或身体状况..." required></textarea>
+                            <label for="newFeedbackContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="newFeedbackContent" rows="5" placeholder="Please describe your problem or physical condition in detail..." required></textarea>
                         </div>
                     </form>
                     <div id="newFeedbackMessage" class="alert" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="submitNewFeedback">
-                        <span id="submitText">提交</span>
+                        <span id="submitText">Submit</span>
                         <span id="submitLoading" class="spinner-border spinner-border-sm ms-1" style="display: none;"></span>
                     </button>
                 </div>
@@ -408,8 +408,8 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="feedbackDetailModalLabel">咨询详情</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="feedbackDetailModalLabel">Consultation Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="feedbackDetailContent">
@@ -417,7 +417,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -425,8 +425,8 @@
 
     <footer class="py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">医师回复时间为北京时间8:00-19:00.</p>
-            <p class="mb-0">如您有紧急联系需求，请联系000-00000000.</p>
+            <p class="mb-0">The doctor's response time is from 8:00 to 19:00 Beijing time.</p>
+            <p class="mb-0">If you have an urgent contact need, please call 120.</p>
         </div>
     </footer>
 
@@ -487,19 +487,19 @@
                             switch (feedback.status) {
                                 case 'pending':
                                     statusClass = 'status-pending';
-                                    statusText = '高风险';
+                                    statusText = 'High risk';
                                     break;
                                 case 'processing':
                                     statusClass = 'status-processing';
-                                    statusText = '中风险';
+                                    statusText = 'Medium risk';
                                     break;
                                 case 'resolved':
                                     statusClass = 'status-resolved';
-                                    statusText = '低风险';
+                                    statusText = 'Low risk';
                                     break;
                                 case 'unreaded':
                                     statusClass = 'status-unreaded';
-                                    statusText = '待回复'
+                                    statusText = 'Pending reply'
                             }
                             
                             // 创建日期格式化
@@ -514,10 +514,10 @@
                                 
                                 replyHtml = `
                                     <div class="reply-section">
-                                        <h6><i class="bi bi-reply me-2"></i>医师回复</h6>
+                                        <h6><i class="bi bi-reply me-2"></i>Doctor's reply</h6>
                                         <p>${feedback.reply}</p>
                                         <div class="feedback-timestamp text-end">
-                                            回复时间: ${formattedRepliedDate}
+                                            Reply Time: ${formattedRepliedDate}
                                         </div>
                                     </div>
                                 `;
@@ -537,11 +537,11 @@
                                         </div>
                                         <p class="card-text">${contentPreview}</p>
                                         <div class="feedback-timestamp">
-                                            提交时间: ${formattedDate}
+                                            Submission Time: ${formattedDate}
                                         </div>
                                         ${replyHtml}
                                         <button class="btn btn-outline-primary btn-sm mt-3 view-details" data-id="${feedback.id}">
-                                            查看详情
+                                            View Details
                                         </button>
                                     </div>
                                 </div>
@@ -565,16 +565,16 @@
                     
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'col-12 alert alert-danger';
-                    errorDiv.textContent = errorData.detail || '加载反馈失败，请刷新页面重试';
+                    errorDiv.textContent = errorData.detail || 'Failed to load feedback, please refresh the page and try again.';
                     feedbackList.appendChild(errorDiv);
                 }
             } catch (error) {
-                console.error('加载反馈出错:', error);
+                console.error('Error loading feedback:', error);
                 loadingIndicator.style.display = 'none';
                 
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'col-12 alert alert-danger';
-                errorDiv.textContent = '网络错误，请检查您的连接';
+                errorDiv.textContent = 'Network error, please check your connection.';
                 feedbackList.appendChild(errorDiv);
             }
             
@@ -582,7 +582,7 @@
             submitNewFeedback.addEventListener('click', async () => {
                 // 表单验证
                 if (!newFeedbackTitle.value.trim() || !newFeedbackContent.value.trim()) {
-                    newFeedbackMessage.textContent = '请填写完整的咨询信息';
+                    newFeedbackMessage.textContent = 'Please fill in the complete consultation information.';
                     newFeedbackMessage.className = 'alert alert-danger';
                     newFeedbackMessage.style.display = 'block';
                     return;
@@ -590,7 +590,7 @@
                 
                 // 显示加载状态
                 submitNewFeedback.disabled = true;
-                submitText.textContent = '提交中...';
+                submitText.textContent = 'Submitting...';
                 submitLoading.style.display = 'inline-block';
                 newFeedbackMessage.style.display = 'none';
                 
@@ -609,7 +609,7 @@
                     
                     if (response.ok) {
                         // 提交成功
-                        newFeedbackMessage.textContent = '咨询提交成功！';
+                        newFeedbackMessage.textContent = 'Consultation submitted successfully!';
                         newFeedbackMessage.className = 'alert alert-success';
                         
                         // 清空表单
@@ -623,17 +623,17 @@
                     } else {
                         // 提交失败
                         const errorData = await response.json();
-                        newFeedbackMessage.textContent = errorData.detail || '提交失败，请稍后再试';
+                        newFeedbackMessage.textContent = errorData.detail || 'Submission failed, please try again later.';
                         newFeedbackMessage.className = 'alert alert-danger';
                     }
                 } catch (error) {
-                    console.error('提交咨询出错:', error);
-                    newFeedbackMessage.textContent = '网络错误，请检查您的连接';
+                    console.error('Error submitting inquiry:', error);
+                    newFeedbackMessage.textContent = 'Network error, please check your connection.';
                     newFeedbackMessage.className = 'alert alert-danger';
                 } finally {
                     // 恢复按钮状态
                     submitNewFeedback.disabled = false;
-                    submitText.textContent = '提交';
+                    submitText.textContent = 'Submit';
                     submitLoading.style.display = 'none';
                     newFeedbackMessage.style.display = 'block';
                 }
@@ -654,19 +654,19 @@
                 switch (feedback.status) {
                     case 'pending':
                         statusClass = 'status-pending';
-                        statusText = '高风险';
+                        statusText = 'High risk';
                         break;
                     case 'processing':
                         statusClass = 'status-processing';
-                        statusText = '中风险';
+                        statusText = 'Medium risk';
                         break;
                     case 'resolved':
                         statusClass = 'status-resolved';
-                        statusText = '低风险';
+                        statusText = 'Low risk';
                         break;
                     case 'unreaded':
                         statusClass = 'status-unreaded';
-                        statusText = '待回复'
+                        statusText = 'Pending reply'
                 }
                 
                 // 创建日期格式化
@@ -681,10 +681,10 @@
                     
                     replyHtml = `
                         <div class="reply-section mt-4">
-                            <h5 class="mb-3"><i class="bi bi-reply me-2"></i>医师回复</h5>
+                            <h5 class="mb-3"><i class="bi bi-reply me-2"></i>Doctor's reply</h5>
                             <p>${feedback.reply}</p>
                             <div class="feedback-timestamp text-end">
-                                回复时间: ${formattedRepliedDate}
+                                Reply Time: ${formattedRepliedDate}
                             </div>
                         </div>
                     `;
@@ -697,13 +697,13 @@
                 detailContent.innerHTML = `
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                         <span class="feedback-status ${statusClass}">${statusText}</span>
-                        <small class="text-muted">咨询ID: ${feedback.id}</small>
+                        <small class="text-muted">Consultation ID: ${feedback.id}</small>
                     </div>
                     <div class="mb-4">
-                        <h5>咨询内容</h5>
+                        <h5>Consultation content</h5>
                         <p>${feedback.content.replace(/\n/g, '<br>')}</p>
                         <div class="feedback-timestamp">
-                            提交时间: ${formattedDate}
+                            Submission Time: ${formattedDate}
                         </div>
                     </div>
                     ${replyHtml}

@@ -1,6 +1,6 @@
 {% extends '/predictor/base.html' %}
 
-{% block title %}批量预测 - HAPI风险预测系统{% endblock %}
+{% block title %}Multiple predictions - HAPI Risk Prediction System for Elderly Patients{% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -154,8 +154,8 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-7">
-                <h1 class="display-5">老年患者多例HAPI风险预测</h1>
-                <p class="lead">上传患者数据批量评估HAPI风险并生成预测报告</p>
+                <h1 class="display-5">Multiple predictions</h1>
+                <p class="lead">Upload patient data to batch assess HAPI risk and generate prediction reports</p>
             </div>
         </div>
     </div>
@@ -165,31 +165,31 @@
     <!-- 数据安全提示 -->
     <div class="alert alert-info animate-fade-in-delay-1 mb-4">
         <i class="bi bi-shield-lock me-2"></i>
-        <strong>数据安全与隐私:</strong> 您上传的患者数据仅在本地处理，不会存储在我们的服务器上。处理完成后，所有临时数据将被自动删除。
+        <strong>Data Security and Privacy:</strong> The patient data you upload is processed locally only and will not be stored on our servers. Once processing is complete, all temporary data will be automatically deleted.
     </div>
     
     <!-- 使用说明 -->
     <div class="card animate-fade-in-delay-2 mb-4">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>使用说明</h4>
+            <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>Instructions for Use</h4>
         </div>
         <div class="card-body">
-            <h6 class="border-bottom pb-2 mb-3">批量预测文件格式要求</h6>
+            <h6 class="border-bottom pb-2 mb-3">Batch prediction file format requirements</h6>
             <ul class="mb-4">
-                <li>支持CSV或Excel格式（.csv、.xlsx、.xls）</li>
-                <li>文件必须包含所有必要的预测字段（见下方必需字段列表）</li>
-                <li>遵循模板文件中的数据格式和取值范围</li>
-                <li>如果包含<code>actual_label</code>列，系统将计算评估指标</li>
+                <li>Supports CSV or Excel formats (.csv, .xlsx, .xls)</li>
+                <li>The document must include all necessary forecast fields (see the required fields list below).</li>
+                <li>Follow the data format and value range in the template file.</li>
+                <li>If it includes<code>actual_label</code>Column，The system will calculate the evaluation metrics.</li>
             </ul>
             
-            <h6 class="border-bottom pb-2 mb-3">必需字段列表</h6>
+            <h6 class="border-bottom pb-2 mb-3">List of Required Fields</h6>
             
             <div class="accordion mb-4" id="fieldsAccordion">
                 <!-- 数值型字段 -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingNumeric">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumeric" aria-expanded="true" aria-controls="collapseNumeric">
-                            <strong>数值型字段</strong>
+                            <strong>Numeric field</strong>
                         </button>
                     </h2>
                     <div id="collapseNumeric" class="accordion-collapse collapse show" aria-labelledby="headingNumeric" data-bs-parent="#fieldsAccordion">
@@ -198,31 +198,31 @@
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>字段名称</th>
-                                            <th>说明</th>
-                                            <th>单位/范围</th>
+                                            <th>Field Name</th>
+                                            <th>Explanation</th>
+                                            <th>Unit/Scope</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>住院第几天</td>
-                                            <td>患者入院后的天数</td>
-                                            <td>天 (整数)</td>
+                                            <td>Length of hospitalization</td>
+                                            <td>Number of days since the patient was admitted</td>
+                                            <td>Day (integer)</td>
                                         </tr>
                                         <tr>
-                                            <td>白细胞计数</td>
-                                            <td>血液中白细胞的数量</td>
-                                            <td>10^9/L (通常范围: 4.0-10.0)</td>
+                                            <td>White blood cells</td>
+                                            <td>The number of white blood cells in the blood</td>
+                                            <td>10^9/L (Typical range: 4.0-10.0)</td>
                                         </tr>
                                         <tr>
-                                            <td>血钾浓度</td>
-                                            <td>血液中钾离子的浓度</td>
-                                            <td>mmol/L (通常范围: 3.5-5.5)</td>
+                                            <td>Serum potassium</td>
+                                            <td>The concentration of potassium ions in the blood</td>
+                                            <td>mmol/L (Typical range: 3.5-5.5)</td>
                                         </tr>
                                         <tr>
-                                            <td>白蛋白计数</td>
-                                            <td>血液中白蛋白的浓度</td>
-                                            <td>g/L (通常范围: 35.0-55.0)</td>
+                                            <td>Albumin</td>
+                                            <td>The concentration of albumin in the blood</td>
+                                            <td>g/L (Typical range: 35.0-55.0)</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -235,7 +235,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingCategorical">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategorical" aria-expanded="false" aria-controls="collapseCategorical">
-                            <strong>分类型字段</strong>
+                            <strong>Categorical field</strong>
                         </button>
                     </h2>
                     <div id="collapseCategorical" class="accordion-collapse collapse" aria-labelledby="headingCategorical" data-bs-parent="#fieldsAccordion">
@@ -244,76 +244,76 @@
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>字段名称</th>
-                                            <th>说明</th>
-                                            <th>有效值</th>
+                                            <th>Field Name</th>
+                                            <th>Explanation</th>
+                                            <th>Effective value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>吸烟史</td>
-                                            <td>患者是否有吸烟习惯</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Smoking history</td>
+                                            <td>Does the patient have a smoking habit?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>摩擦力/剪切力</td>
-                                            <td>皮肤受到的摩擦和剪切力</td>
-                                            <td><code>无</code> / <code>潜在</code> / <code>有</code></td>
+                                            <td>Friction or shear</td>
+                                            <td>Friction and shear forces on the skin</td>
+                                            <td><code>No</code> / <code>Potential</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>移动能力</td>
-                                            <td>患者自主移动的能力</td>
-                                            <td><code>不受限</code> / <code>受限</code></td>
+                                            <td>Mobility</td>
+                                            <td>The patient's ability to move independently</td>
+                                            <td><code>Unrestricted</code> / <code>Restricted</code></td>
                                         </tr>
                                         <tr>
-                                            <td>感知觉</td>
-                                            <td>患者对外界刺激的感知能力</td>
-                                            <td><code>不受限</code> / <code>受限</code></td>
+                                            <td>Sensation</td>
+                                            <td>The patient's ability to perceive external stimuli</td>
+                                            <td><code>Unrestricted</code> / <code>Restricted</code></td>
                                         </tr>
                                         <tr>
-                                            <td>身体活动度</td>
-                                            <td>患者日常活动状态</td>
-                                            <td><code>走</code> / <code>坐</code> / <code>卧</code></td>
+                                            <td>Physical activity</td>
+                                            <td>Patient's daily activity status</td>
+                                            <td><code>Walking</code> / <code>Sitting</code> / <code>Lying down</code></td>
                                         </tr>
                                         <tr>
-                                            <td>日常食物获取</td>
-                                            <td>患者获取食物的情况</td>
-                                            <td><code>充足</code> / <code>缺乏</code></td>
+                                            <td>Daily food intake</td>
+                                            <td>Patient's access to food</td>
+                                            <td><code>Sufficient</code> / <code>Insufficient</code></td>
                                         </tr>
                                         <tr>
-                                            <td>水肿</td>
-                                            <td>患者是否有水肿症状</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Edema</td>
+                                            <td>Does the patient have symptoms of edema?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>皮肤潮湿</td>
-                                            <td>患者皮肤湿度状况</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Moist skin</td>
+                                            <td>Patient's skin moisture condition</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>意识障碍</td>
-                                            <td>患者意识状态</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Consciousness</td>
+                                            <td>Patient's consciousness status</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>高血压</td>
-                                            <td>患者是否患有高血压</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Hypertension</td>
+                                            <td>Does the patient have hypertension?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>糖尿病</td>
-                                            <td>患者是否患有糖尿病</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Diabetes mellitus</td>
+                                            <td>Does the patient have diabetes?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>冠心病</td>
-                                            <td>患者是否患有冠心病</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Coronary heart disease</td>
+                                            <td>Does the patient have coronary heart disease?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                         <tr>
-                                            <td>下肢深静脉血栓</td>
-                                            <td>患者是否患有下肢静脉血栓</td>
-                                            <td><code>无</code> / <code>有</code></td>
+                                            <td>Deep vein thrombosis</td>
+                                            <td>Does the patient have deep vein thrombosis in the lower limbs?</td>
+                                            <td><code>No</code> / <code>Yes</code></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -326,7 +326,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOptional">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
-                            <strong>患者标识字段</strong>
+                            <strong>Patient identification field</strong>
                         </button>
                     </h2>
                     <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#fieldsAccordion">
@@ -335,37 +335,37 @@
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>字段名称</th>
-                                            <th>说明</th>
-                                            <th>示例</th>
+                                            <th>Field Name</th>
+                                            <th>Explanation</th>
+                                            <th>Example</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>患者ID</td>
-                                            <td>患者的唯一标识符（不参与预测）</td>
+                                            <td>Patient ID</td>
+                                            <td>The patient's unique identifier (not involved in the prediction)</td>
                                             <td>P10001, ID001</td>
                                         </tr>
                                         <tr>
-                                            <td>患者姓名</td>
-                                            <td>患者姓名（不参与预测）</td>
-                                            <td>张三, 李四</td>
+                                            <td>Patient Name</td>
+                                            <td>Patient Name(not involved in the prediction)</td>
+                                            <td>Tom, Jack</td>
                                         </tr>
                                         <tr>
-                                            <td>序号</td>
-                                            <td>数据记录的序号</td>
+                                            <td>Serial Number</td>
+                                            <td>Serial number of data record</td>
                                             <td>1, 2, 3...</td>
                                         </tr>
                                         <tr>
-                                            <td>年龄</td>
-                                            <td>患者年龄（可选）</td>
+                                            <td>Age</td>
+                                            <td>Patient age (optional)</td>
                                             <td>65, 72, 80</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="alert alert-info mt-3">
-                                <i class="bi bi-info-circle me-2"></i>患者ID和姓名字段仅用于结果标识，不会参与模型预测计算。
+                                <i class="bi bi-info-circle me-2"></i>Patient ID and name fields are used only for result identification and will not participate in model prediction calculations.
                             </div>
                         </div>
                     </div>
@@ -378,8 +378,8 @@
                         <i class="bi bi-exclamation-triangle-fill fa-2x"></i>
                     </div>
                     <div>
-                        <h6 class="alert-heading">注意事项</h6>
-                        <p class="mb-0">请确保数据格式正确，严格遵循上述字段的有效值范围，尤其是分类型字段的取值必须与系统规定一致，否则可能导致预测失败。</p>
+                        <h6 class="alert-heading">Precautions</h6>
+                        <p class="mb-0">Please ensure that the data format is correct and strictly follow the valid value ranges for the fields mentioned above. In particular, the values for categorical fields must be consistent with the system specifications; otherwise, prediction failure may occur.</p>
                     </div>
                 </div>
             </div>
@@ -389,28 +389,28 @@
     <!-- 上传数据文件部分 -->
     <div class="card mb-4 shadow-sm animate-fade-in-delay-2">
         <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="bi bi-upload me-2"></i>上传数据文件</h5>
+            <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Upload data file</h5>
         </div>
         <div class="card-body">
             <!-- 错误提示区域 -->
             <div id="errorAlert" class="alert alert-danger mb-4" style="display: none;">
                 <i class="bi bi-exclamation-circle me-2"></i>
-                <span id="errorMessage">处理文件时出错</span>
+                <span id="errorMessage">An error occurred while processing the file</span>
             </div>
             
             <form id="batch-prediction-form" action="/api/predictor/batch_predict" method="post" enctype="multipart/form-data" class="mb-4 needs-validation" novalidate>
                 <div class="mb-4">
-                    <label for="file" class="form-label fw-bold">选择CSV或Excel文件</label>
+                    <label for="file" class="form-label fw-bold">Select a CSV or Excel file</label>
                     <input type="file" class="form-control form-control-lg" id="file" name="file" accept=".csv, .xlsx, .xls" required>
-                    <div class="form-text">上传包含必要字段的CSV或Excel文件，系统将使用多个模型进行综合预测并生成结果。文件大小不超过10MB。</div>
-                    <div class="invalid-feedback">请选择一个文件。</div>
+                    <div class="form-text">Upload a CSV or Excel file containing the necessary fields, and the system will use multiple models to make comprehensive predictions and generate results. The file size should not exceed 10MB.</div>
+                    <div class="invalid-feedback">Please select a file.</div>
                 </div>
                 <div class="d-grid gap-2 d-md-flex mt-4">
                     <a href="/api/predictor/download_template" class="btn btn-outline-secondary btn-lg">
-                         <i class="bi bi-download me-2"></i> 下载模板
+                         <i class="bi bi-download me-2"></i> Download template
                      </a>
                     <button type="submit" class="btn btn-primary btn-lg flex-grow-1" id="submit-btn">
-                        <i class="bi bi-arrow-right-circle me-2"></i> 上传并分析
+                        <i class="bi bi-arrow-right-circle me-2"></i> Upload and analyze
                     </button>
                 </div>
             </form>
@@ -419,20 +419,20 @@
                 {% if request.query_params.get('success') == 'true' %}
                     {% set batch_id = request.query_params.get('batch_id', '') %}
                     <div class="alert alert-success">
-                        <h5><i class="bi bi-check-circle me-2"></i> 预测完成</h5>
-                        <p>批量预测任务 {{ batch_id }} 处理完成，您可以下载预测结果文件：</p>
+                        <h5><i class="bi bi-check-circle me-2"></i> Prediction completed</h5>
+                        <p>Batch prediction task {{ batch_id }} has been completed, and you can download the prediction result file：</p>
                         <a href="/api/predictor/download_batch_results/{{ batch_id }}" class="btn btn-success mt-2">
-                            <i class="bi bi-download me-2"></i> 下载预测结果
+                            <i class="bi bi-download me-2"></i> Download prediction results
                         </a>
                         <button type="button" class="btn btn-primary mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#resultModal" id="showResultBtn">
-                            <i class="bi bi-graph-up me-2"></i> 查看详情
+                            <i class="bi bi-graph-up me-2"></i> View Details
                         </button>
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 // 设置模态框内容
                                 const modalMessage = document.getElementById('modalMessage');
                                 if (modalMessage) {
-                                    modalMessage.innerHTML = `<i class="bi bi-check-circle me-2"></i> 批量预测任务 {{ batch_id }} 处理完成。`;
+                                    modalMessage.innerHTML = `<i class="bi bi-check-circle me-2"></i> Batch prediction task {{ batch_id }} has been completed.`;
                                 }
                                 
                                 // 设置下载按钮链接
@@ -450,25 +450,25 @@
     
     <div class="card mb-4 animate-fade-in-delay-2">
         <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i> 隐私与安全</h5>
+            <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i> Privacy and Security</h5>
         </div>
         <div class="card-body">
-            <p>本系统采用以下措施保护您的数据：</p>
+            <p>This system uses the following measures to protect your data:</p>
             <div class="row">
                 <div class="col-md-6">
                     <ul>
-                        <li><strong>传输加密：</strong> 所有数据通过加密通道传输</li>
-                        <li><strong>匿名化处理：</strong> 系统不存储患者身份识别信息</li>
+                        <li><strong>Transmission Encryption:</strong> All data is transmitted through encrypted channels.</li>
+                        <li><strong>Anonymization:</strong> The system does not store patient identification information.</li>
                     </ul>
                 </div>
                 <div class="col-md-6">
                     <ul>
-                        <li><strong>定期数据清理：</strong> 所有结果将在30天后自动删除</li>
-                        <li><strong>访问控制：</strong> 只有授权用户可访问分析结果</li>
+                        <li><strong>Regular data cleanup:</strong> All results will be automatically deleted after 30 days.</li>
+                        <li><strong>Access Control:</strong> Only authorized users can access the analysis results.</li>
                     </ul>
                 </div>
             </div>
-            <p class="text-muted small mb-0">注意：请勿在上传文件中包含任何可识别患者身份的信息。如有数据安全方面的顾虑，请联系系统管理员。</p>
+            <p class="text-muted small mb-0">Note: Do not include any patient-identifiable information in the uploaded files. If you have any data security concerns, please contact the system administrator.</p>
         </div>
     </div>
 </div>
@@ -478,22 +478,22 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="resultModalLabel">批量预测结果</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="关闭"></button>
+                <h5 class="modal-title" id="resultModalLabel">Batch prediction results</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="modalMessage" class="alert alert-success mb-4">
                     <!-- 消息内容将由JavaScript填充 -->
                 </div>
-                <p class="mb-3">批量预测已完成，您可以点击下方按钮下载预测结果文件。</p>
+                <p class="mb-3">Batch prediction is complete. You can click the button below to download the prediction result file.</p>
                 <div class="d-grid">
                     <a href="#" id="downloadResultBtn" class="btn btn-lg btn-success">
-                        <i class="bi bi-download me-2"></i> 下载预测结果
+                        <i class="bi bi-download me-2"></i> Download prediction results
                     </a>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

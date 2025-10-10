@@ -121,7 +121,7 @@ function updateFontSize() {
 // 更新字体大小显示
 function updateFontSizeDisplay() {
     if (baseFontSize === 16) {
-        currentFontSize.textContent = '默认';
+        currentFontSize.textContent = 'default';
     } else {
         currentFontSize.textContent = `${baseFontSize}px`;
     }

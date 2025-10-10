@@ -1,6 +1,6 @@
 {% extends 'predictor/base.html' %}
 
-{% block title %}单例预测 - HAPI风险预测系统{% endblock %}
+{% block title %}Single prediction{% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -55,10 +55,12 @@
         .assessment-labels {
             margin-bottom: 0.5rem; 
         }
+        /* 增加图表容器高度以显示所有特征标签 */
         .chart-container {
             position: relative; 
-            height: 400px; 
-            width: 100%; /* Adjusted height */
+            height: 600px;  /* 从400px增加到600px，确保所有17个特征都能显示 */
+            width: 100%;
+            min-height: 500px;  /* 设置最小高度 */
         }
         /* 添加动画效果 - 与dashboard.html一致 */
         .animate-fade-in {
@@ -121,8 +123,8 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-7">
-                <h1 class="display-5">老年患者HAPI风险预测</h1>
-                <p class="lead">输入患者数据评估HAPI风险并生成预测报告</p>
+                <h1 class="display-5">Single Prediction</h1>
+                <p class="lead">Enter patient data to assess HAPI risk and generate a predictive report.</p>
             </div>
         </div>
     </div>
@@ -132,7 +134,7 @@
     <!-- 错误提示区域 -->
     <div id="errorAlert" class="alert alert-danger mb-4" style="display: none;">
         <i class="bi bi-exclamation-circle me-2"></i>
-        <span id="errorMessage">提交表单时出错</span>
+        <span id="errorMessage">An error occurred while submitting the form</span>
     </div>
     
     <div class="row justify-content-center">
@@ -141,50 +143,50 @@
                 <!-- 基本信息 -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><i class="bi bi-person-badge me-2"></i>基本信息</h4>
+                        <h4 class="mb-0"><i class="bi bi-person-badge me-2"></i>Basic Information</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="age" class="form-label">年龄（岁）</label>
-                                    <input type="number" class="form-control" id="age" name="年龄" value = "60" required min="0" max="120">
+                                    <label for="age" class="form-label">Age (years)</label>
+                                    <input type="number" class="form-control" id="age" name="Age" value = "60" required min="0" max="120">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="hospital_stay" class="form-label">住院第几天（天）</label>
-                                    <input type="number" class="form-control" id="hospital_stay" name="住院第几天" value = "5" required min="1">
-                                    <div class="invalid-feedback">请输入有效的住院天数 (>=1)。</div>
+                                    <label for="hospital_stay" class="form-label">Length of hospitalization(days)</label>
+                                    <input type="number" class="form-control" id="hospital_stay" name="Length of hospitalization" value = "5" required min="1">
+                                    <div class="invalid-feedback">Please enter a valid number of hospital days (>=1)。</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="wbc" class="form-label">白细胞计数（×10^9/L,4.0-10.0）</label>
-                                    <input type="number" class="form-control" id="wbc" name="白细胞计数" step="0.1" value = "5.7" required max = "1000">
-                                    <div class="invalid-feedback">请输入白细胞计数。</div>
+                                    <label for="wbc" class="form-label">White blood cells（×10^9/L,4.0-10.0）</label>
+                                    <input type="number" class="form-control" id="wbc" name="White blood cells" step="0.1" value = "5.7" required max = "1000">
+                                    <div class="invalid-feedback">Please enter the white blood cell count.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="potassium" class="form-label">血钾浓度（mmol/L,3.5-5.5）</label>
-                                    <input type="number" class="form-control" id="potassium" name="血钾浓度" step="0.1" value = "6.5" required max = "100">
-                                    <div class="invalid-feedback">请输入血钾浓度。</div>
+                                    <label for="potassium" class="form-label">Serum potassium（mmol/L,3.5-5.5）</label>
+                                    <input type="number" class="form-control" id="potassium" name="Serum potassium" step="0.1" value = "6.5" required max = "100">
+                                    <div class="invalid-feedback">Please enter the blood potassium concentration.</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="albumin" class="form-label">白蛋白计数（g/L,35-50）</label>
-                                    <input type="number" class="form-control" id="albumin" name="白蛋白计数" step="0.1" value = "57.8" required max = "1000">
-                                    <div class="invalid-feedback">请输入白蛋白计数。</div>
+                                    <label for="albumin" class="form-label">Albumin（g/L,35-50）</label>
+                                    <input type="number" class="form-control" id="albumin" name="Albumin" step="0.1" value = "57.8" required max = "1000">
+                                    <div class="invalid-feedback">Please enter the albumin count.</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">吸烟史</label>
+                                    <label class="form-label">Smoking history</label>
                                     <div class="radio-group-horizontal">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="吸烟史" id="smoking_no" value="无" required>
-                                            <label class="form-check-label" for="smoking_no">无</label>
+                                            <input class="form-check-input" type="radio" name="Smoking history" id="smoking_no" value="No" required>
+                                            <label class="form-check-label" for="smoking_no">No</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="吸烟史" id="smoking_yes" value="有" checked>
-                                            <label class="form-check-label" for="smoking_yes">有</label>
+                                            <input class="form-check-input" type="radio" name="Smoking history" id="smoking_yes" value="Yes" checked>
+                                            <label class="form-check-label" for="smoking_yes">Yes</label>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">请选择吸烟史。</div>
+                                    <div class="invalid-feedback">Please select smoking history.</div>
                                 </div>
                             </div>
                         </div>
@@ -194,124 +196,124 @@
                 <!-- 症状与状态评估 -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><i class="bi bi-clipboard2-pulse me-2"></i>症状与状态评估</h4>
+                        <h4 class="mb-0"><i class="bi bi-clipboard2-pulse me-2"></i>Symptom and status assessment</h4>
                     </div>
                     <div class="card-body">
                         {# Using rows for better alignment #}
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">摩擦力/剪切力</label>
+                                <label class="form-label d-block mb-2">Friction or shear</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="摩擦力/剪切力" id="friction_none" value="无" required>
-                                        <label class="form-check-label" for="friction_none">无</label>
+                                        <input class="form-check-input" type="radio" name="Friction or shear" id="friction_none" value="No" required>
+                                        <label class="form-check-label" for="friction_none">No</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="摩擦力/剪切力" id="friction_potential" value="潜在" checked>
-                                        <label class="form-check-label" for="friction_potential">潜在</label>
+                                        <input class="form-check-input" type="radio" name="Friction or shear" id="friction_potential" value="Potential" checked>
+                                        <label class="form-check-label" for="friction_potential">Potential</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="摩擦力/剪切力" id="friction_yes" value="有">
-                                        <label class="form-check-label" for="friction_yes">有</label>
+                                        <input class="form-check-input" type="radio" name="Friction or shear" id="friction_yes" value="Yes">
+                                        <label class="form-check-label" for="friction_yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">移动能力</label>
+                                <label class="form-label d-block mb-2">Mobility</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="移动能力" id="mobility_unlimited" value="不受限" required>
-                                        <label class="form-check-label" for="mobility_unlimited">不受限</label>
+                                        <input class="form-check-input" type="radio" name="Mobility" id="mobility_unlimited" value="Unrestricted" required>
+                                        <label class="form-check-label" for="mobility_unlimited">Unrestricted</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="移动能力" id="mobility_limited" value="受限" checked>
-                                        <label class="form-check-label" for="mobility_limited">受限</label>
+                                        <input class="form-check-input" type="radio" name="Mobility" id="mobility_limited" value="Restricted" checked>
+                                        <label class="form-check-label" for="mobility_limited">Restricted</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">水肿</label>
+                                <label class="form-label d-block mb-2">Edema</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="水肿" id="edema_no" value="无" required checked>
-                                        <label class="form-check-label" for="edema_no">无</label>
+                                        <input class="form-check-input" type="radio" name="Edema" id="edema_no" value="No" required checked>
+                                        <label class="form-check-label" for="edema_no">No</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="水肿" id="edema_yes" value="有">
-                                        <label class="form-check-label" for="edema_yes">有</label>
+                                        <input class="form-check-input" type="radio" name="Edema" id="edema_yes" value="Yes">
+                                        <label class="form-check-label" for="edema_yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-3">
                              <div class="col-md-4">
-                                <label class="form-label d-block mb-2">感知觉</label>
+                                <label class="form-label d-block mb-2">Sensation</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="感知觉" id="perception_unlimited" value="不受限" required checked>
-                                        <label class="form-check-label" for="perception_unlimited">不受限</label>
+                                        <input class="form-check-input" type="radio" name="Sensation" id="perception_unlimited" value="Unrestricted" required checked>
+                                        <label class="form-check-label" for="perception_unlimited">Unrestricted</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="感知觉" id="perception_limited" value="受限">
-                                        <label class="form-check-label" for="perception_limited">受限</label>
+                                        <input class="form-check-input" type="radio" name="Sensation" id="perception_limited" value="Restricted">
+                                        <label class="form-check-label" for="perception_limited">Restricted</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">身体活动度</label>
+                                <label class="form-label d-block mb-2">Physical activity</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="身体活动度" id="activity_walking" value="走" required checked>
-                                        <label class="form-check-label" for="activity_walking">走</label>
+                                        <input class="form-check-input" type="radio" name="Physical activity" id="activity_walking" value="Walking" required checked>
+                                        <label class="form-check-label" for="activity_walking">Walking</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="身体活动度" id="activity_sitting" value="坐">
-                                        <label class="form-check-label" for="activity_sitting">坐</label>
+                                        <input class="form-check-input" type="radio" name="Physical activity" id="activity_sitting" value="Sitting">
+                                        <label class="form-check-label" for="activity_sitting">Sitting</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="身体活动度" id="activity_lying" value="卧">
-                                        <label class="form-check-label" for="activity_lying">卧</label>
+                                        <input class="form-check-input" type="radio" name="Physical activity" id="activity_lying" value="Lying down">
+                                        <label class="form-check-label" for="activity_lying">Lying down</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">日常食物获取</label>
+                                <label class="form-label d-block mb-2">Daily food intake</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="日常食物获取" id="food_enough" value="充足" required checked>
-                                        <label class="form-check-label" for="food_enough">充足</label>
+                                        <input class="form-check-input" type="radio" name="Daily food intake" id="food_enough" value="Sufficient" required checked>
+                                        <label class="form-check-label" for="food_enough">Sufficient</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="日常食物获取" id="food_insufficient" value="缺乏">
-                                        <label class="form-check-label" for="food_insufficient">缺乏</label>
+                                        <input class="form-check-input" type="radio" name="Daily food intake" id="food_insufficient" value="Insufficient">
+                                        <label class="form-check-label" for="food_insufficient">Insufficient</label>
                                     </div>
                                 </div>
                             </div>
                          </div>
                          <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">皮肤潮湿</label>
+                                <label class="form-label d-block mb-2">Moist skin</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="皮肤潮湿" id="skin_no" value="无" required>
-                                        <label class="form-check-label" for="skin_no">无</label>
+                                        <input class="form-check-input" type="radio" name="Moist skin" id="skin_no" value="No" required>
+                                        <label class="form-check-label" for="skin_no">No</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="皮肤潮湿" id="skin_yes" value="有" checked>
-                                        <label class="form-check-label" for="skin_yes">有</label>
+                                        <input class="form-check-input" type="radio" name="Moist skin" id="skin_yes" value="Yes" checked>
+                                        <label class="form-check-label" for="skin_yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label d-block mb-2">意识障碍</label>
+                                <label class="form-label d-block mb-2">Consciousness</label>
                                 <div class="radio-group-horizontal">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="意识障碍" id="consciousness_no" value="无" required checked>
-                                        <label class="form-check-label" for="consciousness_no">无</label>
+                                        <input class="form-check-input" type="radio" name="Consciousness" id="consciousness_no" value="No" required checked>
+                                        <label class="form-check-label" for="consciousness_no">No</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="意识障碍" id="consciousness_yes" value="有">
-                                        <label class="form-check-label" for="consciousness_yes">有</label>
+                                        <input class="form-check-input" type="radio" name="Consciousness" id="consciousness_yes" value="Yes">
+                                        <label class="form-check-label" for="consciousness_yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
@@ -324,48 +326,48 @@
                 <!-- 基础疾病 -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>基础疾病</h4>
+                        <h4 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>Underlying medical condition</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="hypertension" class="form-label">高血压</label>
-                                    <select class="form-select" id="hypertension" name="高血压" required>
-                                        <option value="" disabled selected>请选择...</option>
-                                        <option value="无">无</option>
-                                        <option value="有" selected>有</option>
+                                    <label for="hypertension" class="form-label">Hypertension</label>
+                                    <select class="form-select" id="hypertension" name="Hypertension" required>
+                                        <option value="" disabled selected>Please select...</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes" selected>Yes</option>
                                     </select>
-                                    <div class="invalid-feedback">请选择是否有高血压。</div>
+                                    <div class="invalid-feedback">Please select whether you have high blood pressure.</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="diabetes" class="form-label">糖尿病</label>
-                                    <select class="form-select" id="diabetes" name="糖尿病" required>
-                                        <option value="" disabled selected>请选择...</option>
-                                        <option value="无" selected>无</option>
-                                        <option value="有">有</option>
+                                    <label for="diabetes" class="form-label">Diabetes mellitus</label>
+                                    <select class="form-select" id="diabetes" name="Diabetes mellitus" required>
+                                        <option value="" disabled selected>Please select...</option>
+                                        <option value="No" selected>No</option>
+                                        <option value="Yes">Yes</option>
                                     </select>
-                                     <div class="invalid-feedback">请选择是否有糖尿病。</div>
+                                     <div class="invalid-feedback">Please select whether you have diabetes.</div>
                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="heart_disease" class="form-label">冠心病</label>
-                                    <select class="form-select" id="heart_disease" name="冠心病" required>
-                                        <option value="" disabled selected>请选择...</option>
-                                        <option value="无">无</option>
-                                        <option value="有" selected>有</option>
+                                    <label for="heart_disease" class="form-label">Coronary heart disease</label>
+                                    <select class="form-select" id="heart_disease" name="Coronary heart disease" required>
+                                        <option value="" disabled selected>Please select...</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes" selected>Yes</option>
                                     </select>
-                                     <div class="invalid-feedback">请选择是否有冠心病。</div>
+                                     <div class="invalid-feedback">Please select whether you have coronary heart disease.</div>
                                </div>
                                 <div class="mb-3">
-                                    <label for="thrombosis" class="form-label">下肢深静脉血栓</label>
-                                    <select class="form-select" id="thrombosis" name="下肢深静脉血栓" required>
-                                        <option value="" disabled selected>请选择...</option>
-                                        <option value="无">无</option>
-                                        <option value="有" selected>有</option>
+                                    <label for="thrombosis" class="form-label">Deep vein thrombosis</label>
+                                    <select class="form-select" id="thrombosis" name="Deep vein thrombosis" required>
+                                        <option value="" disabled selected>Please select...</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes" selected>Yes</option>
                                     </select>
-                                     <div class="invalid-feedback">请选择是否有下肢深静脉血栓。</div>
+                                     <div class="invalid-feedback">Please select whether there is deep vein thrombosis in the lower limbs.</div>
                                </div>
                             </div>
                         </div>
@@ -375,10 +377,10 @@
                 <!-- 操作按钮 -->
                 <div class="row justify-content-center mb-5">
                     <div class="col-md-6 d-grid mb-2 mb-md-0">
-                        <button type="reset" class="btn btn-secondary btn-lg">重置</button>
+                        <button type="reset" class="btn btn-secondary btn-lg">Reset</button>
                     </div>
                     <div class="col-md-6 d-grid">
-                        <button type="submit" class="btn btn-primary btn-lg">预测</button>
+                        <button type="submit" class="btn btn-primary btn-lg">Predict</button>
                     </div>
                 </div>
             </form>
@@ -390,35 +392,45 @@
         <div class="modal-dialog modal-xl"> {# Changed to modal-xl for more space #}
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="resultModalLabel">预测结果</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="resultModalLabel">Prediction results</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="riskLevel" class="alert text-center mb-4" role="alert"></div>
                     
-                    <h5>各模型预测结果</h5>
+                    <!-- 护理措施建议 -->
+                    <div id="nursingInterventions" class="card mb-4" style="display: none;">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="bi bi-clipboard2-check me-2"></i>Recommended Nursing Interventions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="interventionContent"></div>
+                        </div>
+                    </div>
+                    
+                    <h5>Predicted Results of Each Model</h5>
                     <div class="table-responsive mb-4">
                         <table class="table table-bordered table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>模型</th>
-                                    <th>预测结果</th>
-                                    <th>风险概率</th>
+                                    <th>Model</th>
+                                    <th>Prediction results</th>
+                                    <th>Risk Probability</th>
                                 </tr>
                             </thead>
                             <tbody id="predictionResults"></tbody>
                         </table>
                     </div>
                     
-                    <h5>特征重要性分析 (XGBoost)</h5>
+                    <h5>Feature Importance Analysis</h5>
                     <div class="chart-container mb-4">
                         <canvas id="contributionChart"></canvas>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <a href="#" id="downloadReport" class="btn btn-success" target="_blank">
-                        <i class="fas fa-download"></i> 下载预测报告
+                        <i class="fas fa-download"></i> Download forecast report
                     </a>
                 </div>
             </div>

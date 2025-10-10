@@ -30,13 +30,13 @@ function initThemeToggle() {
 function showLoading() {
     submitButton.disabled = true;
     loadingIndicator.style.display = 'inline-block';
-    buttonText.textContent = '登录中...';
+    buttonText.textContent = 'Logging in...';
 }
 
 function hideLoading() {
     submitButton.disabled = false;
     loadingIndicator.style.display = 'none';
-    buttonText.textContent = '登录';
+    buttonText.textContent = 'Log in';
 }
 
 function showMessage(text, type) {
@@ -57,7 +57,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     
     showLoading();
-    showMessage('正在登录...', 'success');
+    showMessage('Logging in...', 'success');
     
     try {
         const formData = new FormData();
@@ -72,7 +72,7 @@ loginForm.addEventListener('submit', async (e) => {
         
         if (response.ok) {
             const data = await response.json();
-            showMessage('登录成功！正在跳转...', 'success');
+            showMessage('Login successful! Redirecting......', 'success');
             
             // 保存用户信息和token
             localStorage.setItem('username', data.username);
@@ -82,8 +82,8 @@ loginForm.addEventListener('submit', async (e) => {
             
             // 设置全局Authorization头部，用于后续API请求
             const authToken = `${data.token_type} ${data.access_token}`;
-            console.log('已设置认证令牌:', authToken.substring(0, 20) + '...');
-            console.log('用户角色:', data.role || 'user');
+            console.log('Authentication token has been set:', authToken.substring(0, 20) + '...');
+            console.log('User Role:', data.role || 'user');
             
             // 延迟跳转到仪表盘
             setTimeout(() => {
@@ -92,15 +92,15 @@ loginForm.addEventListener('submit', async (e) => {
         } else {
             try {
                 const data = await response.json();
-                showMessage(data.detail || '登录失败，请检查用户名和密码', 'error');
+                showMessage(data.detail || 'Login failed, please check your username and password', 'error');
             } catch (e) {
-                showMessage(`登录失败: ${response.status} ${response.statusText}`, 'error');
+                showMessage(`Login failed: ${response.status} ${response.statusText}`, 'error');
             }
             hideLoading();
         }
     } catch (error) {
-        console.error('登录错误:', error);
-        showMessage('登录失败，请检查网络连接', 'error');
+        console.error('Login error:', error);
+        showMessage('Login failed, please check your network connection', 'error');
         hideLoading();
     }
 });
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tokenType = localStorage.getItem('token_type');
     
     if (token && tokenType) {
-        console.log('发现已保存的令牌，可能已登录');
+        console.log('Saved token found, may already be logged in');
     }
     
     // 初始化主题

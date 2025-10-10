@@ -38,7 +38,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     // 验证管理员密钥（如果尝试注册为管理员）
     if (role === 'admin') {
         if (!adminKey || adminKey !== 'admin123') { // 简单示例，实际应使用更安全的方式
-            messageDiv.textContent = '管理员密钥无效！';
+            messageDiv.textContent = 'Administrator key is invalid!';
             messageDiv.className = 'message error';
             messageDiv.style.display = 'block';
             
@@ -68,7 +68,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         const data = await response.json();
         
         if (response.ok) {
-            messageDiv.textContent = `注册成功！角色: ${role === 'admin' ? '管理员' : '普通用户'}`;
+            messageDiv.textContent = `Registration successful! Character: ${role === 'admin' ? 'Administrator' : 'Regular user'}`;
             messageDiv.className = 'message success';
             document.getElementById('registerForm').reset();
             
@@ -77,11 +77,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
                 window.location.href = '/login';
             }, 1500);
         } else {
-            messageDiv.textContent = data.detail || '注册失败，请重试';
+            messageDiv.textContent = data.detail || 'Registration failed, please try again';
             messageDiv.className = 'message error';
         }
     } catch (error) {
-        messageDiv.textContent = '注册失败，请检查网络连接';
+        messageDiv.textContent = 'Registration failed, please check your network connection.';
         messageDiv.className = 'message error';
     }
     

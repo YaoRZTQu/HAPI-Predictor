@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据看板 - "未卜先治"</title>
+    <title>Data Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
@@ -76,7 +76,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/dashboard">
-                <i class="bi bi-hospital me-2"></i> "未卜先治"
+                <i class="bi bi-hospital me-2"></i> HAPI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -84,36 +84,36 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> 首页</a>
+                        <a class="nav-link" href="/dashboard"><i class="bi bi-house-door" style="margin-right: 0.25rem;"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> 单例预测</a>
+                        <a class="nav-link" href="/predictor/single"><i class="bi bi-person-check" style="margin-right: 0.25rem;"></i> Single prediction</a>
                     </li>
                     <li class="nav-item" id="batchPredictLink" style="display: none;">
-                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> 多例预测</a>
+                        <a class="nav-link" href="/predictor/batch"><i class="bi bi-people" style="margin-right: 0.25rem;"></i> Multiple predictions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> 智能问诊</a>
+                        <a class="nav-link" href="/medical-qa"><i class="bi bi-chat-dots" style="margin-right: 0.25rem;"></i> Intelligent consultation</a>
                     </li>
                     <li class="nav-item" id="dataDashboardLink" style="display: none;">
-                        <a class="nav-link active" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> 数据看板</a>
+                        <a class="nav-link active" href="/data-dashboard"><i class="bi bi-graph-up" style="margin-right: 0.25rem;"></i> Data Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> 设置</a>
+                        <a class="nav-link" href="/settings"><i class="bi bi-gear" style="margin-right: 0.25rem;"></i> Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> 关于我们</a>
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i> About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> 咨询留言</a>
+                        <a class="nav-link" href="/my-feedback"><i class="bi bi-chat-square-text" style="margin-right: 0.25rem;"></i> Inquiry Message</a>
                     </li>
                     <li class="nav-item" id="adminLink" style="display: none;">
-                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> 医师控制台</a>
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock" style="margin-right: 0.25rem;"></i> Physician Console</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-outline-light btn-sm" id="logoutBtn">
-                        <i class="bi bi-box-arrow-right me-1"></i>退出
+                        <i class="bi bi-box-arrow-right me-1"></i>Exit
                     </button>
                 </div>
             </div>
@@ -125,16 +125,16 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-7">
-                    <h1 class="display-5">数据看板</h1>
-                    <p class="lead">系统运行状态和使用数据统计</p>
+                    <h1 class="display-5">Data Dashboard</h1>
+                    <p class="lead">System operating status and usage data statistics</p>
                 </div>
                 <div class="col-md-5 text-md-end">
                     <div class="btn-group animate-fade-in-delay-1">
                         <button type="button" class="btn btn-primary" id="refreshBtn">
-                            <i class="bi bi-arrow-clockwise me-1"></i> 刷新数据
+                            <i class="bi bi-arrow-clockwise me-1"></i> Refresh Data
                         </button>
                         <button type="button" class="btn btn-outline-primary" id="exportBtn">
-                            <i class="bi bi-download me-1"></i> 导出报告
+                            <i class="bi bi-download me-1"></i> Export Report
                         </button>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
     <main class="container mb-5" id="dashboard-content">
         <div id="loading" class="text-center" style="display: none;">
             <div class="loading-spinner"></div>
-            <p>加载数据中...</p>
+            <p>Loading data...</p>
         </div>
         
         <!-- 数据统计卡片 -->
@@ -156,28 +156,28 @@
                     <div class="stat-card p-4 text-center">
                         <i class="bi bi-layers stat-icon"></i>
                         <div class="stat-value" id="models-count">0</div>
-                        <div class="stat-label">可用模型</div>
+                        <div class="stat-label">Available models</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="stat-card p-4 text-center">
                         <i class="bi bi-clipboard-data stat-icon"></i>
                         <div class="stat-value" id="predictions-count">0</div>
-                        <div class="stat-label">预测记录</div>
+                        <div class="stat-label">Prediction Record</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="stat-card p-4 text-center">
                         <i class="bi bi-chat-dots stat-icon"></i>
                         <div class="stat-value" id="qa-count">0</div>
-                        <div class="stat-label">问答次数</div>
+                        <div class="stat-label">Number of Q&A sessions</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="stat-card p-4 text-center">
                         <i class="bi bi-people stat-icon"></i>
                         <div class="stat-value" id="users-count">0</div>
-                        <div class="stat-label">活跃用户</div>
+                        <div class="stat-label">Active users</div>
                     </div>
                 </div>
             </div>
@@ -189,11 +189,11 @@
                 <!-- 系统性能 -->
                 <div class="col-md-4 animate-fade-in-delay-1">
                     <div class="chart-container performance-chart">
-                        <h3 class="chart-title">系统性能</h3>
+                        <h3 class="chart-title">System performance</h3>
                         <div id="performance-indicators">
                             <div class="performance-indicator">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="performance-label">CPU使用率</span>
+                                    <span class="performance-label">CPU Usage</span>
                                     <span class="performance-value" id="cpu-usage-value">0%</span>
                                 </div>
                                 <div class="performance-progress progress">
@@ -202,7 +202,7 @@
                             </div>
                             <div class="performance-indicator">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="performance-label">内存使用率</span>
+                                    <span class="performance-label">Memory Usage</span>
                                     <span class="performance-value" id="memory-usage-value">0%</span>
                                 </div>
                                 <div class="performance-progress progress">
@@ -211,7 +211,7 @@
                             </div>
                             <div class="performance-indicator">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="performance-label">磁盘使用率</span>
+                                    <span class="performance-label">Disk Usage</span>
                                     <span class="performance-value" id="disk-usage-value">0%</span>
                                 </div>
                                 <div class="performance-progress progress">
@@ -220,7 +220,7 @@
                             </div>
                             <div class="performance-indicator">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="performance-label">响应时间</span>
+                                    <span class="performance-label">Response Time</span>
                                     <span class="performance-value" id="response-time-value">0ms</span>
                                 </div>
                                 <div class="performance-progress progress">
@@ -234,7 +234,7 @@
                 <!-- 预测趋势 -->
                 <div class="col-md-4 animate-fade-in-delay-2">
                     <div class="chart-container">
-                        <h3 class="chart-title">预测趋势 (7天)</h3>
+                        <h3 class="chart-title">Predicted Trend (7 days)</h3>
                         <canvas id="prediction-trend-chart"></canvas>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
                 <!-- 问答趋势 -->
                 <div class="col-md-4 animate-fade-in-delay-3">
                     <div class="chart-container">
-                        <h3 class="chart-title">问答趋势 (7天)</h3>
+                        <h3 class="chart-title">Q&A Trends (7 Days)</h3>
                         <canvas id="qa-trend-chart"></canvas>
                     </div>
                 </div>
@@ -255,7 +255,7 @@
                 <!-- 最近预测记录 -->
                 <div class="col-md-6 animate-fade-in-delay-2">
                     <div class="feature-card records-container">
-                        <h3 class="records-title">最近预测记录</h3>
+                        <h3 class="records-title">Recent prediction records</h3>
                         <div id="recent-predictions">
                             <!-- 预测记录将通过JavaScript动态加载 -->
                         </div>
@@ -265,7 +265,7 @@
                 <!-- 最近问答记录 -->
                 <div class="col-md-6 animate-fade-in-delay-3">
                     <div class="feature-card records-container">
-                        <h3 class="records-title">最近问答记录</h3>
+                        <h3 class="records-title">Recent Q&A records</h3>
                         <div id="recent-qa">
                             <!-- 问答记录将通过JavaScript动态加载 -->
                         </div>
@@ -280,10 +280,10 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-md-6 text-md-start">
-                    <p class="mb-0">&copy; 2025 "未卜先治"</p>
+                    <p class="mb-0">&copy; 2025 HAPI System. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0">数据更新时间: <span id="last-update-time">--</span></p>
+                    <p class="mb-0">Data Update Time:<span id="last-update-time">--</span></p>
                 </div>
             </div>
         </div>
@@ -294,15 +294,15 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="predictionDetailModalLabel">预测详情</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="predictionDetailModalLabel">Prediction Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-4">
                         <div class="col-md-5">
                             <div class="card border-0 shadow-sm mb-3">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>基本信息</h6>
+                                    <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless mb-0">
@@ -311,19 +311,19 @@
                                             <td id="prediction-id" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                            <th class="text-muted">用户</th>
+                                            <th class="text-muted">User</th>
                                             <td id="prediction-user" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                            <th class="text-muted">模型</th>
+                                            <th class="text-muted">Model</th>
                                             <td id="prediction-model" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                            <th class="text-muted">预测时间</th>
+                                            <th class="text-muted">Prediction Time</th>
                                             <td id="prediction-time" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                            <th class="text-muted">风险等级</th>
+                                            <th class="text-muted">Risk Level</th>
                                             <td>
                                                 <span id="prediction-risk-level" class="badge bg-secondary">-</span>
                                             </td>
@@ -335,15 +335,15 @@
                         <div class="col-md-7">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="bi bi-input-cursor-text me-2"></i>输入数据</h6>
+                                    <h6 class="mb-0"><i class="bi bi-input-cursor-text me-2"></i>Input Data</h6>
                                 </div>
                                 <div class="card-body p-0">
                             <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                                         <table class="table table-hover mb-0" id="input-data-table">
                                     <thead class="table-light">
                                         <tr>
-                                                    <th width="40%" class="text-truncate">参数名称</th>
-                                                    <th width="60%" class="text-truncate">参数值</th>
+                                                    <th width="40%" class="text-truncate">Parameter Name</th>
+                                                    <th width="60%" class="text-truncate">Parameter value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -360,16 +360,16 @@
                         <div class="col-12">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>预测结果</h6>
+                                    <h6 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>Prediction results</h6>
                                 </div>
                                 <div class="card-body p-0">
                             <div class="table-responsive">
                                         <table class="table table-hover mb-0" id="prediction-results-table">
                                     <thead class="table-light">
                                         <tr>
-                                                    <th width="25%">模型</th>
-                                                    <th width="45%">预测结果</th>
-                                                    <th width="30%">概率</th>
+                                                    <th width="25%">Model</th>
+                                                    <th width="45%">Prediction results</th>
+                                                    <th width="30%">Probability</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -383,9 +383,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="download-report-btn" onclick="downloadPredictionReport(document.getElementById('prediction-id').textContent)">
-                        <i class="bi bi-download me-1"></i> 下载报告
+                        <i class="bi bi-download me-1"></i> Download Report
                     </button>
                 </div>
             </div>
@@ -397,26 +397,26 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="conversationModalLabel">对话详情</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    <h5 class="modal-title" id="conversationModalLabel">Conversation Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="card-header bg-primary text-white">
-                            <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>基本信息</h6>
+                            <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
                         </div>
                         <div class="card-body">
                             <table class="table table-borderless mb-0">
                                 <tr>
-                                    <th width="30%" class="text-muted">对话ID</th>
+                                    <th width="30%" class="text-muted">Conversation ID</th>
                                     <td id="conversation-id" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                    <th class="text-muted">用户</th>
+                                    <th class="text-muted">User</th>
                                     <td id="conversation-user" class="fw-semibold">-</td>
                                 </tr>
                                 <tr>
-                                    <th class="text-muted">开始时间</th>
+                                    <th class="text-muted">Start Time</th>
                                     <td id="conversation-time" class="fw-semibold">-</td>
                                 </tr>
                             </table>
@@ -425,7 +425,7 @@
                     
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h6 class="mb-0"><i class="bi bi-chat-dots me-2"></i>对话内容</h6>
+                            <h6 class="mb-0"><i class="bi bi-chat-dots me-2"></i>Dialogue content</h6>
                         </div>
                         <div class="card-body">
                             <div class="conversation-container p-3 border rounded" style="max-height: 400px; overflow-y: auto;">
@@ -437,7 +437,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

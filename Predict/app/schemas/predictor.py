@@ -2,29 +2,37 @@ from pydantic import BaseModel, Field
 from typing import Optional, Any
 
 class SinglePredictionRequest(BaseModel):
-    # Based on main2.js formData collection
-    # Note: '年龄' field was in the target template/JS but not in EXPECTED_FEATURES
-    # Let's include it for now, but it won't be used by the current service logic.
-    age: Optional[int] = Field(None, alias="年龄", ge=0, le=120)
+    # {{ AURA-X: Modify - 将所有字段改为使用alias接收英文字段名，保持内部使用英文字段名 }}
+    # Note: Age field is optional, not used in model prediction
+    age: Optional[int] = Field(None, alias="Age", ge=0, le=120)
     
-    住院第几天: float = Field(..., ge=1)
-    白细胞计数: float
-    血钾浓度: float
-    白蛋白计数: float
-    吸烟史: str
-    # Use alias for fields with slashes or other special characters
-    friction_shear: str = Field(..., alias="摩擦力/剪切力") 
-    移动能力: str
-    感知觉: str
-    身体活动度: str
-    日常食物获取: str
-    水肿: str
-    皮肤潮湿: str
-    意识障碍: str
-    高血压: str
-    糖尿病: str
-    冠心病: str
-    thrombosis: str = Field(..., alias="下肢深静脉血栓")
+    # 数值型字段 - 使用英文字段名作为alias
+    length_of_hospitalization: float = Field(..., alias="Length of hospitalization", ge=1)
+    white_blood_cells: float = Field(..., alias="White blood cells")
+    serum_potassium: float = Field(..., alias="Serum potassium")
+    albumin: float = Field(..., alias="Albumin")
+    
+    # 分类型字段 - 使用英文字段名作为alias
+    smoking_history: str = Field(..., alias="Smoking history")
+    friction_shear: str = Field(..., alias="Friction or shear")
+    mobility: str = Field(..., alias="Mobility")
+    sensation: str = Field(..., alias="Sensation")
+    physical_activity: str = Field(..., alias="Physical activity")
+    daily_food_intake: str = Field(..., alias="Daily food intake")
+    edema: str = Field(..., alias="Edema")
+    moist_skin: str = Field(..., alias="Moist skin")
+    consciousness: str = Field(..., alias="Consciousness")
+    
+    # 基础疾病字段 - 使用英文字段名作为alias
+    hypertension: str = Field(..., alias="Hypertension")
+    diabetes_mellitus: str = Field(..., alias="Diabetes mellitus")
+    coronary_heart_disease: str = Field(..., alias="Coronary heart disease")
+    deep_vein_thrombosis: str = Field(..., alias="Deep vein thrombosis")
+    
+    # {{ AURA-X: Add - 配置Pydantic v1使用alias进行序列化/反序列化 }}
+    class Config:
+        # 允许通过alias或字段名填充字段 (Pydantic v1)
+        allow_population_by_field_name = True
 
 class PredictionResponseDetail(BaseModel):
     # Structure for individual model predictions
